@@ -1,0 +1,45 @@
+{
+  "name": "amela-rn-cli",
+  "version": "0.0.1",
+  "description": "AMELA react-native CLI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SpQuyt/amela-rn-cli.git"
+  },
+  "keywords": [],
+  "author": "spquyt",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SpQuyt/amela-rn-cli/issues"
+  },
+  "homepage": "https://github.com/SpQuyt/amela-rn-cli#readme",
+  "dependencies": {
+    "boxen": "^5.0.1",
+    "chalk": "^4.1.1",
+    "clear": "^0.1.0",
+    "clui": "^0.3.6",
+    "colors": "^1.4.0",
+    "configstore": "^6.0.0",
+    "figlet": "^1.5.0",
+    "inquirer": "^8.1.1",
+    "lodash": "^4.17.21",
+    "minimist": "^1.2.5",
+    "node-keytool": "^0.0.3",
+    "package-json": "^6.5.0",
+    "prompt": "^1.1.0",
+    "semver": "^7.3.5",
+    "semver-diff": "^3.1.1",
+    "simple-git": "^2.40.0",
+    "touch": "^3.1.0",
+    "xcode": "^3.0.1",
+    "yargs": "^17.0.1"
+  },
+  "devDependencies": {},
+  "bin": {
+    "amela-rn-cli": "./index.js"
+  }
+}
