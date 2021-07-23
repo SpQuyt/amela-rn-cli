@@ -192,7 +192,7 @@ const handleInstallPackages = async (appName, appDisplayName) => {
                 `rm -r ${currPath.replace("./", "")}`,
                 `Removing folder ${currPath}...`
             );
-            await editFiles();
+            await editFiles(appName, appDisplayName);
             return true;
         }
         return false;
