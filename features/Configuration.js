@@ -11,6 +11,7 @@ const setUpIosConfigWithEnv = async (
     appDisplayName,
     appCode
 ) => {
+    const appNameWithoutHyphen = `${appName.trim().replace(/-/g, "").replace(/ /g, "")}`;
     // Setup env file
     const envFilePath = `./${appName}/.env.${envTypeFull}`;
     const envTypeShorten =
@@ -38,25 +39,25 @@ const setUpIosConfigWithEnv = async (
     );
 
     // Creating XCScheme file
-    const xcschemePath = `./${appName}/ios/${appName}.xcodeproj/xcshareddata/xcschemes/`;
+    const xcschemePath = `./${appName}/ios/${appNameWithoutHyphen}.xcodeproj/xcshareddata/xcschemes/`;
     const constantXCScheme =
         envTypeFull === "development"
-            ? Constants.XCSchemeStringDEV.replace(/demo-app/g, appName)
+            ? Constants.XCSchemeStringDEV.replace(/demo-app/g, appNameWithoutHyphen)
             : envTypeFull === "staging"
-            ? Constants.XCSchemeStringSTG.replace(/demo-app/g, appName)
-            : Constants.XCSchemeStringPROD.replace(/demo-app/g, appName);
+            ? Constants.XCSchemeStringSTG.replace(/demo-app/g, appNameWithoutHyphen)
+            : Constants.XCSchemeStringPROD.replace(/demo-app/g, appNameWithoutHyphen);
     if (!fs.existsSync(xcschemePath)) {
         await CustomPromise.execCommandLinePromise(
-            `cd ./${appName}/ios/${appName}.xcodeproj/xcshareddata/ && mkdir xcschemes`,
+            `cd ./${appName}/ios/${appNameWithoutHyphen}.xcodeproj/xcshareddata/ && mkdir xcschemes`,
             `Making folder xcschemes...`
         );
     }
     await CustomPromise.createNewFilePromise(
-        `./${xcschemePath}/${appName} ${envTypeShorten.toUpperCase()}.xcscheme`,
+        `./${xcschemePath}/${appNameWithoutHyphen} ${envTypeShorten.toUpperCase()}.xcscheme`,
         constantXCScheme
     );
 
-    const infoPlistPath = `./${appName}/ios/${appName}/Info.plist`;
+    const infoPlistPath = `./${appName}/ios/${appNameWithoutHyphen}/Info.plist`;
     if (envTypeFull === "development") {
         // Creating XCConfig file
         await CustomPromise.createNewFilePromise(
@@ -87,7 +88,7 @@ const setUpIosConfigWithEnv = async (
     }
 
     // Setting pbxProject
-    const pbxProjectPath = `./${appName}/ios/${appName}.xcodeproj/project.pbxproj`;
+    const pbxProjectPath = `./${appName}/ios/${appNameWithoutHyphen}.xcodeproj/project.pbxproj`;
     const configFilePath = `./${appName}/ios/Config.xcconfig`;
     let uuid, fileRef, buildPhaseUUID;
     if (envTypeFull === "development") {
@@ -160,6 +161,7 @@ const setUpIosConfigWithEnv = async (
 };
 
 const setUpAndroidConfigAllEnvs = async (appName, appDisplayName, appCode) => {
+    const appNameWithoutHyphen = appName.toString().trim().replace(/-/g, "").replace(/ /g, "");
     // Generate keystore files
     const keyStgName = `${appCode}-staging-key.keystore`;
     const aliasStg = `${appCode}-staging-alias`;
@@ -199,8 +201,8 @@ const setUpAndroidConfigAllEnvs = async (appName, appDisplayName, appCode) => {
     );
     await CustomPromise.replaceStringFilePromise(
         appBuildGradlePath,
-        `defaultConfig {\n        applicationId \"com.${appName}\"\n        minSdkVersion rootProject.ext.minSdkVersion\n        targetSdkVersion rootProject.ext.targetSdkVersion\n        versionCode 1\n        versionName \"1.0\"\n    }`,
-        `defaultConfig {\n        applicationId env.get(\"ANDROID_APP_ID\")\n        minSdkVersion rootProject.ext.minSdkVersion\n        targetSdkVersion rootProject.ext.targetSdkVersion\n        versionCode Integer.valueOf(env.get(\"ANDROID_APP_VERSION_CODE\"))\n        versionName env.get(\"ANDROID_APP_VERSION_NAME\")\n        multiDexEnabled true\n        resValue \"string\", \"build_config_package\", \"com.${appName}\"\n    }`
+        `defaultConfig {\n        applicationId \"com.${appNameWithoutHyphen}\"\n        minSdkVersion rootProject.ext.minSdkVersion\n        targetSdkVersion rootProject.ext.targetSdkVersion\n        versionCode 1\n        versionName \"1.0\"\n    }`,
+        `defaultConfig {\n        applicationId env.get(\"ANDROID_APP_ID\")\n        minSdkVersion rootProject.ext.minSdkVersion\n        targetSdkVersion rootProject.ext.targetSdkVersion\n        versionCode Integer.valueOf(env.get(\"ANDROID_APP_VERSION_CODE\"))\n        versionName env.get(\"ANDROID_APP_VERSION_NAME\")\n        multiDexEnabled true\n        resValue \"string\", \"build_config_package\", \"com.${appNameWithoutHyphen}\"\n    }`
     );
     await CustomPromise.replaceStringFilePromise(
         appBuildGradlePath,

@@ -16,10 +16,11 @@ const main = async () => {
         const askQuestionsObject = await Installation.handleAskFirstQuestions();
         // Install NPM packages
         if (askQuestionsObject) {
-            const { appName, appDisplayName, appCode } = askQuestionsObject;
+            const { appName, appDisplayName, appCode, repoURL } = askQuestionsObject;
             const installPackageBoolean = await Installation.handleInstallPackages(
                 appName,
-                appDisplayName
+                appDisplayName,
+                repoURL,
             );
             if (!installPackageBoolean) return;
 

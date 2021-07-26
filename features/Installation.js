@@ -13,7 +13,7 @@ const editFiles = async (appName, appDisplayName) => {
     await CustomPromise.replaceStringFilePromise(
         `${newPath}/app.json`,
         '"name": "DemoApp"',
-        `\"name\": \"${appName}\"`
+        `\"name\": \"${appName.trim().replace(/-/g, "").replace(/ /g, "")}\"`
     );
     await CustomPromise.replaceStringFilePromise(
         `${newPath}/app.json`,
@@ -23,7 +23,7 @@ const editFiles = async (appName, appDisplayName) => {
     await CustomPromise.replaceStringFilePromise(
         `${newPath}/package.json`,
         '"name": "DemoApp"',
-        `\"name\": \"${appName}\"`
+        `\"name\": \"${appName.trim().replace(/-/g, "").replace(/ /g, "")}\"`
     );
     await CustomPromise.replaceStringFilePromise(
         `${newPath}/.gitignore`,
@@ -97,11 +97,11 @@ const editFiles = async (appName, appDisplayName) => {
 
         // Add workspace check plist
         await CustomPromise.execCommandLinePromise(
-            `cd ./${appName}/ios/${appName}.xcworkspace && mkdir xcshareddata`,
+            `cd ./${appName}/ios/${appName.trim().replace(/-/g, "").replace(/ /g, "")}.xcworkspace && mkdir xcshareddata`,
             `Making folder xcshareddata...`
         );
         await CustomPromise.createNewFilePromise(
-            `./${appName}/ios/${appName}.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist`,
+            `./${appName}/ios/${appName.trim().replace(/-/g, "").replace(/ /g, "")}.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist`,
             Constants.IDEWorkspaceString
         );
     } else {
@@ -141,29 +141,53 @@ const handleAskFirstQuestions = async () => {
     const resultQuestions = await CustomPromise.promptGetListQuestionPromise(
         listQuestions,
     );
-    const listQuestionsAppCode = ["App code (3 characters - example: app, skn, tag,...): "];
+    const listQuestionsAppCode = ["App code for Android keystore (3 characters - example: app, skn, tag,...): "];
     const resultAppCode = await CustomPromise.promptGetListQuestionPromise(
         listQuestionsAppCode,
     );
+    const listQuestionsRemoteURL = ["Remote repository URL (Optional): "];
+    const resultRemoteURL = await CustomPromise.promptGetListQuestionPromise(
+        listQuestionsRemoteURL,
+    );
     const appCode = resultAppCode[listQuestionsAppCode[0]].trim();
-    const appName = resultQuestions[listQuestions[0]].trim().replace(/-/g, "").replace(/ /g, "");
+    const appName = resultQuestions[listQuestions[0]].trim().replace(/ /g, "");
     const appDisplayName = resultQuestions[listQuestions[1]].trim().replace(/'|"|@/g, "");
-    console.log(`AppName: ${appName}`);
+    const repoURL = resultRemoteURL[listQuestionsRemoteURL[0]].trim();
+    console.log(`FolderName: ${appName}`);
+    console.log(`AppName: ${appName.trim().replace(/-/g, "")}`);
     console.log(`AppDisplayName: ${appDisplayName}`);
     console.log(`AppCode: ${appCode}`);
+    console.log(`Repo URL: ${repoURL}`);
     return {
         appCode,
         appName,
         appDisplayName,
+        repoURL,
     }
 }
 
-const handleInstallPackages = async (appName, appDisplayName) => {
+const addNewGitRemote = async (appName, repoURL) => {
+    const newPath = `./${appName}`;
+    // await CustomPromise.execCommandLinePromise(
+    //     `cd ${newPath} && git init && git remote add origin ${repoURL}`
+    // );
+    await CustomPromise.execCommandLinePromise(
+        `cd ${newPath} && git init && git remote set-url origin ${repoURL} && git fetch --all`
+    );
+}
+
+const handleInstallPackages = async (appName, appDisplayName, repoURL) => {
     const newPath = `./${appName}`;
 
     if (!fs.existsSync(newPath)) {
         await CustomPromise.gitClonePromise();
+        await CustomPromise.execCommandLinePromise(
+            `cd ${currPath} && rm -rf .git`
+        );
         fs.renameSync(currPath, newPath);
+        if (repoURL) {
+            await addNewGitRemote(appName, repoURL);
+        }
         await editFiles(appName, appDisplayName);
         return true;
     }
@@ -192,6 +216,9 @@ const handleInstallPackages = async (appName, appDisplayName) => {
                 `rm -r ${currPath.replace("./", "")}`,
                 `Removing folder ${currPath}...`
             );
+            if (repoURL) {
+                await addNewGitRemote(appName, repoURL);
+            }
             await editFiles(appName, appDisplayName);
             return true;
         }
