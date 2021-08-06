@@ -235,6 +235,14 @@ const setUpAndroidConfigAllEnvs = async (appName, appDisplayName, appCode) => {
         `<resources>\n    <string name=\"app_name\">${appDisplayName}</string>\n</resources>`,
         `<resources/>`
     );
+
+    // Fix Android disable dark-mode
+    const resStylesPath = `./${appName}/android/app/src/main/res/values/styles.xml`;
+    await CustomPromise.replaceStringFilePromise(
+        resStringPath,
+        `<item name="android:textColor">#000000</item>`,
+        `<item name="android:textColor">#000000</item>\n<item name="android:forceDarkAllowed">false</item>`
+    );
 };
 
 const handleSetUpRNConfig = async (appName, appDisplayName, appCode) => {
