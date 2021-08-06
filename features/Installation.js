@@ -173,11 +173,8 @@ const handleAskFirstQuestions = async () => {
 
 const addNewGitRemote = async (appName, repoURL) => {
     const newPath = `./${appName}`;
-    // await CustomPromise.execCommandLinePromise(
-    //     `cd ${newPath} && git init && git remote add origin ${repoURL}`
-    // );
     await CustomPromise.execCommandLinePromise(
-        `cd ${newPath} && git init && git remote set-url origin ${repoURL} && git fetch --all`
+        `cd ${newPath} && git init && git remote add origin ${repoURL} && git fetch --all`
     );
 }
 
