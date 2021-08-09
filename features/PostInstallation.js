@@ -10,7 +10,14 @@ const handleRunSimulatorIOS = async (appName) => {
 };
 
 const handleExec = async (appName) => {
-    if (!isWinOS) {    
+    // Delete README to avoid conflict and then pull master
+    await CustomPromise.execCommandLinePromise(
+        `cd ${appName} && rm -rf README.md`
+    );
+    await CustomPromise.execCommandLinePromise(
+        `cd ${appName} && git pull origin master --allow-unrelated-histories`
+    );
+    if (!isWinOS) {
         // Ask user what to do next
         console.log("Installation completed!");
         const postInstallQuestion = "What do you want to do next?";

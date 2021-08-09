@@ -17,14 +17,14 @@ const Constants = require("./constants");
 // import { exec } from 'child_process';
 // import fs from 'fs';
 
-const gitClonePromise = async (localPath = undefined) => {
+const gitClonePromise = async (localPath = undefined, remoteURL = "https://github.com/amela-technology/react-native-templet-v1.git") => {
     const gitCloneStatus = new Spinner(
-        "Cloning @amela/react-native-templet-v1..."
+        `Cloning ${remoteURL}...`
     );
     return new Promise((resolve, reject) => {
         gitCloneStatus.start();
         git.clone(
-            "https://github.com/amela-technology/react-native-templet-v1.git",
+            remoteURL,
             localPath
         )
             .then(() => {
