@@ -30,12 +30,13 @@ const checkUpdate = async () => {
 
         msg = {
             updateAvailable: `${updateType} update available ${chalk.dim(version)} → ${chalk.green(latestVersion)}`,
+            priority: (verDiff && verDiff !== 'patch') ? `Priority: ${chalk.red(`Mandatory`)}` : `Priority: ${chalk.dim(`Optional`)}`,
             runUpdate: `Run ${chalk.cyan(`npm i -g -f ${name}`)} to update.`,
         };
     }
     return {
         notifyType: verDiff,
-        boxenObj: msg && boxen(`${msg.updateAvailable}\n${msg.runUpdate}`, {
+        boxenObj: msg && boxen(`${msg.updateAvailable}\n${msg.priority}\n${msg.runUpdate}`, {
             margin: 1,
             padding: 1,
             align: 'center',

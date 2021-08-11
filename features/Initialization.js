@@ -14,7 +14,7 @@ const handlePreProcessParams = async () => {
     const { notifyType, boxenObj } = checkUpdateResult;
     if (notifyType) {
         console.log(boxenObj);
-        return false;
+        if (notifyType !== "patch") return false;
     }
 
     // Check if flag of command line is suitable
@@ -45,10 +45,7 @@ const chooseMode = async () => {
     const chooseModeQuestion = "Choose mode";
     const chooseModeAnswerObj = await CustomPromise.getRadioButtonAnswerPromise(
         chooseModeQuestion,
-        [
-            Texts.createNewApp,
-            Texts.changeAppIcon,
-        ]
+        [Texts.createNewApp, Texts.changeAppIcon]
     );
     const chooseModeAnswer = chooseModeAnswerObj[chooseModeQuestion];
     return chooseModeAnswer;
