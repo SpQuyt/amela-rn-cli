@@ -1,6 +1,6 @@
 {
   "name": "amela-rn-cli",
-  "version": "0.0.24",
+  "version": "0.0.46",
   "description": "AMELA react-native CLI",
   "main": "index.js",
   "scripts": {
@@ -33,6 +33,7 @@
     "prompt": "^1.1.0",
     "semver": "^7.3.5",
     "semver-diff": "^3.1.1",
+    "sharp": "^0.28.3",
     "simple-git": "^2.40.0",
     "touch": "^3.1.0",
     "xcode": "^3.0.1",

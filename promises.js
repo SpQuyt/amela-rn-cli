@@ -8,25 +8,16 @@ const fs = require("fs");
 const inquirer = require("inquirer");
 const Keytool = require("./keytool-utils/keytool");
 const Constants = require("./constants");
+const sharp = require("sharp");
 
-// import simpleGit from 'simple-git';
-// const git = simpleGit();
-// import prompt from 'prompt';
-// import colors from 'colors/safe';
-// import { Spinner } from 'clui';
-// import { exec } from 'child_process';
-// import fs from 'fs';
-
-const gitClonePromise = async (localPath = undefined, remoteURL = "https://github.com/amela-technology/react-native-templet-v1.git") => {
-    const gitCloneStatus = new Spinner(
-        `Cloning ${remoteURL}...`
-    );
+const gitClonePromise = async (
+    localPath = undefined,
+    remoteURL = "https://github.com/amela-technology/react-native-templet-v1.git"
+) => {
+    const gitCloneStatus = new Spinner(`Cloning ${remoteURL}...`);
     return new Promise((resolve, reject) => {
         gitCloneStatus.start();
-        git.clone(
-            remoteURL,
-            localPath
-        )
+        git.clone(remoteURL, localPath)
             .then(() => {
                 console.log("\nCloning successfully!");
                 resolve(null);
@@ -170,7 +161,11 @@ const parseXCodeProjectPromise = async (myProj) => {
     });
 };
 
-const createKeyStorePromise = async (appCode, envMode = 'staging', debugMode = false) => {
+const createKeyStorePromise = async (
+    appCode,
+    envMode = "staging",
+    debugMode = false
+) => {
     const alias = `${appCode}-${envMode}-alias`;
     const dname = "CN=" + alias;
     const keypass = Constants.KeyStorePassword;
@@ -179,10 +174,14 @@ const createKeyStorePromise = async (appCode, envMode = 'staging', debugMode = f
     const validity = 10000;
     const valid_from = new Date();
     return new Promise((resolve, reject) => {
-        const store = Keytool(`${appCode}-${envMode}-key.keystore`, Constants.KeyStorePassword, {
-            debug: debugMode,
-            storetype: "JCEKS",
-        });
+        const store = Keytool(
+            `${appCode}-${envMode}-key.keystore`,
+            Constants.KeyStorePassword,
+            {
+                debug: debugMode,
+                storetype: "JCEKS",
+            }
+        );
         store.genkeypair(
             alias,
             keypass,
@@ -204,6 +203,46 @@ const createKeyStorePromise = async (appCode, envMode = 'staging', debugMode = f
     });
 };
 
+const generateIconsPromise = async (
+    inputFilePath,
+    outputFilePath,
+    size,
+    isRounded = false
+) => {
+    if (isRounded) {
+        const rect = Buffer.from(
+            `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 100 100">
+                <circle r="50" cx="50" cy="50"/>
+            </svg>`
+        );
+        return new Promise((resolve, reject) => {
+            sharp(inputFilePath)
+                .resize({ height: size, width: size })
+                .composite([{ input: rect, blend: "dest-in" }])
+                .toFile(outputFilePath)
+                .then((newFileInfo) => {
+                    resolve(newFileInfo);
+                })
+                .catch((err) => {
+                    reject(err);
+                    console.log("Generate icons error");
+                });
+        });
+    }
+    return new Promise((resolve, reject) => {
+        sharp(inputFilePath)
+            .resize({ height: size, width: size })
+            .toFile(outputFilePath)
+            .then((newFileInfo) => {
+                resolve(newFileInfo);
+            })
+            .catch((err) => {
+                reject(err);
+                console.log("Generate icons error");
+            });
+    });
+};
+
 const CustomPromise = {
     gitClonePromise,
     promptGetListQuestionPromise,
@@ -215,6 +254,7 @@ const CustomPromise = {
     getRadioButtonAnswerPromise,
     parseXCodeProjectPromise,
     createKeyStorePromise,
+    generateIconsPromise,
 };
 
 module.exports = CustomPromise;

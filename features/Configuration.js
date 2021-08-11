@@ -11,6 +11,7 @@ const setUpIosConfigWithEnv = async (
     appDisplayName,
     appCode
 ) => {
+    const defaultAppId = `jp.demo.app`;
     const appNameWithoutHyphen = `${appName.trim().replace(/-/g, "").replace(/ /g, "")}`;
     // Setup env file
     const envFilePath = `./${appName}/.env.${envTypeFull}`;
@@ -29,13 +30,13 @@ const setUpIosConfigWithEnv = async (
     );
     await CustomPromise.replaceStringFilePromise(
         `${envFilePath}`,
-        `ANDROID_APP_ID=jp.demo.app`,
-        `ANDROID_APP_ID=com.apps.${appCode}.${envTypeShorten}`
+        `ANDROID_APP_ID=${defaultAppId}`,
+        `ANDROID_APP_ID=com.apps.${appNameWithoutHyphen}.${envTypeShorten}`
     );
     await CustomPromise.replaceStringFilePromise(
         `${envFilePath}`,
-        `IOS_APP_ID=jp.demo.app`,
-        `IOS_APP_ID=com.apps.${appCode}.${envTypeShorten}`
+        `IOS_APP_ID=${defaultAppId}`,
+        `IOS_APP_ID=com.apps.${appNameWithoutHyphen}.${envTypeShorten}`
     );
 
     // Creating XCScheme file
