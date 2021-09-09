@@ -179,7 +179,7 @@ const createKeyStorePromise = async (
             Constants.KeyStorePassword,
             {
                 debug: debugMode,
-                storetype: "JCEKS",
+                storetype: "JKS",
             }
         );
         store.genkeypair(
@@ -196,6 +196,37 @@ const createKeyStorePromise = async (
                 if (err) {
                     reject(err);
                 } else {
+                    resolve(res);
+                }
+            }
+        );
+    });
+};
+
+const getKeyStoreInfoPromise = async (
+    keystore = 'tna-staging-key.keystore',
+    password = "amela@123",
+) => {
+    return new Promise((resolve, reject) => {
+        const store = Keytool(
+            keystore,
+            password,
+            {
+                debug: false,
+                storetype: "JKS",
+            }
+        );
+        store.list(
+            function (err, res) {
+                if (err) {
+                    console.log('Error listing keystore content', err);
+                    reject(err);
+                }else {
+                    console.log('Keystore type: ' + res.storetype + ' Provider: ' + res.provider + ' (' + res.certs.length + ' certificates)');
+                    for (var certidx = 0; certidx < res.certs.length; certidx++) {
+                        var resobj = res.certs[certidx];
+                        console.log('#' + certidx, resobj.certtype, '(' + resobj.issued + ')', resobj.alias, resobj.algorithm, resobj.fingerprint);
+                    }
                     resolve(res);
                 }
             }
@@ -254,6 +285,7 @@ const CustomPromise = {
     getRadioButtonAnswerPromise,
     parseXCodeProjectPromise,
     createKeyStorePromise,
+    getKeyStoreInfoPromise,
     generateIconsPromise,
 };
 

@@ -16,27 +16,19 @@ Amela's react-native CLI.
 ## 1. Create a new project
 * Get inside folder that you want to create project.
 
-* Run command line `$ amela-rn-cli`.
+* Run command line `$ amela-rn-cli --init`.
 
 ![](assetsReadme/newProject/16.23.52.png)
 
-* Choose mode 1 - **Create a new project**.
-
 * Type in ProjectName, should be lowercase, don't have special characters except hyphen "-".
-
-![](assetsReadme/newProject/16.24.36.png)
 
 * Type in ProjectDisplayName.
 
-![](assetsReadme/newProject/16.24.48.png)
-
 * Type in ProjectAppCode, should be lowercase, maximum 3 characters.
-
-![](assetsReadme/newProject/16.25.07.png)
 
 * Type in repository's remote URL (if you have one)
 
-![](assetsReadme/newProject/16.25.15.png)
+![](assetsReadme/newProject/16.25.08.png)
 
 * Waiting...
 
@@ -52,7 +44,7 @@ Amela's react-native CLI.
 
 * **Note: Project will have default AMELA icon**.
 ---
-## 2. Change app's icon
+## 2. Change app's icon (Must be inside a react-native project + Have icon image inside that project)
 * Get inside folder of project you want to change icon.
 
 ![](assetsReadme/appIcon/16.37.27.png)
@@ -61,11 +53,7 @@ Amela's react-native CLI.
 
 ![](assetsReadme/appIcon/16.40.23.png)
 
-* Run command line `$ amela-rn-cli`.
-
-* Choose mode 2 - **Change app icon (Must be inside a react-native project + Have icon image inside that project)**.
-
-![](assetsReadme/appIcon/16.39.56.png)
+* Run command line `$ amela-rn-cli --icon`.
 
 * Type in the name of the image file for icon. For example, I typed **icon.jpeg**.
 

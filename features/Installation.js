@@ -150,7 +150,7 @@ const handleAskFirstQuestions = async () => {
     const resultAppCode = await CustomPromise.promptGetListQuestionPromise(
         listQuestionsAppCode,
     );
-    const listQuestionsRemoteURL = ["Remote repository URL (Optional): "];
+    const listQuestionsRemoteURL = ["Remote repository URL (OPTIONAL, you can skip this): "];
     const resultRemoteURL = await CustomPromise.promptGetListQuestionPromise(
         listQuestionsRemoteURL,
     );

@@ -6,6 +6,7 @@ const Configuration = require("./features/Configuration");
 const PostInstallation = require("./features/PostInstallation");
 const HandleIcon = require("./icon-utils/HandleIcon");
 const Texts = require("./texts");
+const { ArgvType } = require("./enums");
 
 const createNewProject = async () => {
     // Ask questions before installing
@@ -42,13 +43,15 @@ const main = async () => {
         // Check pre-conditions and params from command line
         const preProcessBoolean = await Initialization.handlePreProcessParams();
         if (!preProcessBoolean) return;
+        // Check flag suitable
+        const checkFlagResult = await Initialization.handleCheckFlags();
+        if (checkFlagResult === ArgvType.STOP) return;
         // Decorate first cmd line
-        await Initialization.handleDecorateFirstInit();
+        await Initialization.handleDecorateFirstInit(checkFlagResult);
         // Choose mode
-        const modeResult = await Initialization.chooseMode();
-        if (modeResult === Texts.createNewApp) {
+        if (checkFlagResult === ArgvType.INIT) {
             await createNewProject();
-        } else if (modeResult === Texts.changeAppIcon) {
+        } else if (checkFlagResult === ArgvType.ICON) {
             await HandleIcon.generateAndInstallIcons();
         }
     } catch (err) {

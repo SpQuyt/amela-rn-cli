@@ -5,8 +5,7 @@ const yargs = require("yargs/yargs");
 const { hideBin } = require("yargs/helpers");
 const argv = yargs(hideBin(process.argv)).argv;
 const { version } = require("../package.json");
-const CustomPromise = require("../promises");
-const Texts = require("../texts");
+const { ArgvType } = require("../enums");
 
 const handlePreProcessParams = async () => {
     // Check for update
@@ -14,47 +13,42 @@ const handlePreProcessParams = async () => {
     const { notifyType, boxenObj } = checkUpdateResult;
     if (notifyType) {
         console.log(boxenObj);
-        if (notifyType !== "patch") return false;
-    }
-
-    // Check if flag of command line is suitable
-    if (Object.keys(argv).length > 2) {
-        if (Object.keys(argv).length === 3 && argv.v) {
-            console.log(version);
-            return;
-        }
-        console.log(
-            chalk.red(
-                "Your syntax is not correct! Please try again! \nCorrect flags are:"
-            )
-        );
-        console.log("--version");
         return false;
     }
     return true;
 };
 
-const handleDecorateFirstInit = async () => {
+const handleCheckFlags = async () => {
+    // Check if flag of command line is suitable
+    if (Object.keys(argv).length === 3 && (argv.v || argv.version)) {
+        console.log(version);
+        return ArgvType.STOP;
+    }
+    if (Object.keys(argv).length === 3 && argv.init) {
+        return ArgvType.INIT;
+    }
+    if (Object.keys(argv).length === 3 && argv.icon) {
+        return ArgvType.ICON;
+    }
+    console.log(`\nUsage: amela-rn-cli <flag>
+    
+        amela-rn-cli --init         install new project
+        amela-rn-cli --icon         change icon of your project (must be inside your project)
+        amela-rn-cli --version      check version of your project`);
+        return ArgvType.STOP;
+}
+
+const handleDecorateFirstInit = async (type) => {
     // clear();
     console.log(
-        chalk.yellow(figlet.textSync("AMELA", { horizontalLayout: "full" }))
+        chalk.yellow(figlet.textSync(`AMELA${type ? `-${type.toUpperCase()}` : ''}`, { horizontalLayout: "full" }))
     );
-};
-
-const chooseMode = async () => {
-    const chooseModeQuestion = "Choose mode";
-    const chooseModeAnswerObj = await CustomPromise.getRadioButtonAnswerPromise(
-        chooseModeQuestion,
-        [Texts.createNewApp, Texts.changeAppIcon]
-    );
-    const chooseModeAnswer = chooseModeAnswerObj[chooseModeQuestion];
-    return chooseModeAnswer;
 };
 
 const Initialization = {
     handlePreProcessParams,
     handleDecorateFirstInit,
-    chooseMode,
+    handleCheckFlags,
 };
 
 module.exports = Initialization;

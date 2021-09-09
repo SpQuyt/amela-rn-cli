@@ -30,7 +30,7 @@ const checkUpdate = async () => {
 
         msg = {
             updateAvailable: `${updateType} update available ${chalk.dim(version)} → ${chalk.green(latestVersion)}`,
-            priority: (verDiff && verDiff !== 'patch') ? `Priority: ${chalk.red(`Mandatory`)}` : `Priority: ${chalk.dim(`Optional`)}`,
+            priority: `Priority: ${chalk.red(`Mandatory`)}`,
             runUpdate: `Run ${chalk.cyan(`npm i -g -f ${name}`)} to update.`,
         };
     }

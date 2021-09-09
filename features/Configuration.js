@@ -220,6 +220,12 @@ const setUpAndroidConfigAllEnvs = async (appName, appDisplayName, appCode) => {
         `apply from: file(\"../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle\"); applyNativeModulesAppBuildGradle(project)\n`,
         `apply from: file(\"../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle\"); applyNativeModulesAppBuildGradle(project)\napply from: \"../../node_modules/react-native-code-push/android/codepush.gradle\"\n`
     );
+    await CustomPromise.replaceStringFilePromise(
+        appBuildGradlePath,
+        `signingConfig signingConfigs.debug\n            minifyEnabled enableProguardInReleaseBuilds`,
+        `minifyEnabled enableProguardInReleaseBuilds`
+    );
+    
 
     // Fixing settings.gradle
     const settingsGradlePath = `./${appName}/android/settings.gradle`;
@@ -266,6 +272,8 @@ const handleSetUpRNConfig = async (appName, appDisplayName, appCode) => {
 };
 
 const Configuration = {
+    setUpIosConfigWithEnv,
+    setUpAndroidConfigAllEnvs,
     handleSetUpRNConfig,
 }
 
