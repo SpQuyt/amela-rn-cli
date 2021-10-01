@@ -7,7 +7,7 @@ const simpleGit = require('simple-git');
 
 const git = simpleGit();
 const prompt = require('prompt');
-const colors = require('colors/safe.d.ts');
+const colors = require('colors/safe');
 const { Spinner } = require('clui');
 const { exec } = require('child_process');
 const fs = require('fs');

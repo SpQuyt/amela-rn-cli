@@ -7,7 +7,7 @@ const outputPrefix = 'gen-icon';
 const iosFolderName = 'AppIcon.appiconset';
 const androidFolderName = 'android';
 
-const generateIconIOS = async (inputFilePath, appName) => {
+const generateIconIOS = async ({ inputFilePath, appName }) => {
   const getInsideProjPath = `${appName ? `${appName}/` : ''}`;
   const outputFilePathIOS = `./${getInsideProjPath}${outputPrefix}/${iosFolderName}`;
   // Generate resized images
@@ -38,7 +38,7 @@ const generateIconIOS = async (inputFilePath, appName) => {
   console.log('Done generating iOS icons!');
 };
 
-const generateIconAndroid = async (inputFilePath, appName) => {
+const generateIconAndroid = async ({ inputFilePath, appName }) => {
   const getInsideProjPath = `${appName ? `${appName}/` : ''}`;
   const outputFilePathAndroid = `./${getInsideProjPath}${outputPrefix}/${androidFolderName}`;
   // Generate resized images
@@ -94,7 +94,7 @@ const generateIconAndroid = async (inputFilePath, appName) => {
   console.log('Done generating Android icons!');
 };
 
-const installIconsIOS = async (appNameWithoutHyphen, appName) => {
+const installIconsIOS = async ({ appNameWithoutHyphen, appName }) => {
   const getInsideProjPath = `${appName ? `${appName}/` : ''}`;
   let currentAppName = appNameWithoutHyphen;
   if (!appNameWithoutHyphen) {
@@ -119,7 +119,7 @@ const installIconsIOS = async (appNameWithoutHyphen, appName) => {
   console.log('Done installing iOS icons!');
 };
 
-const installIconsAndroid = async (appName) => {
+const installIconsAndroid = async ({ appName }) => {
   const getInsideProjPath = `${appName ? `${appName}/` : ''}`;
   const sourcePath = `${getInsideProjPath}gen-icon/${androidFolderName}`;
   const destinationPath = `${getInsideProjPath}android/app/src/main/res`;
@@ -142,49 +142,11 @@ const installIconsAndroid = async (appName) => {
   console.log('Done installing Android icons!');
 };
 
-const generateAndInstallIcons = async (appNameWithoutHyphen, appName) => {
-  let inputFilePath;
-  if (appNameWithoutHyphen) {
-    inputFilePath = `./${appName}/defaultIcon.jpeg`;
-  } else {
-    // Ask for inputPath
-    const listQuestionsInOut = [
-      'inputFilePath (Image to generate app icon - JPEG, PNG)',
-    ];
-    const resultInOut = await CustomPromise.promptGetListQuestionPromise(
-      listQuestionsInOut,
-    );
-    inputFilePath = resultInOut[listQuestionsInOut[0]];
-  }
-
-  // Get output prefix folder
-  if (!fs.existsSync(`./${outputPrefix}`)) {
-    await CustomPromise.execCommandLinePromise(
-      appName ? `cd ./${appName} && mkdir ${outputPrefix}` : `mkdir ${outputPrefix}`,
-      'Making folder gen-icon...',
-    );
-  }
-
-  // Generate icon for Android
-  await generateIconAndroid(inputFilePath, appName);
-  // Install icon for Android
-  await installIconsAndroid(appName);
-
-  // Generate icon for iOS
-  await generateIconIOS(inputFilePath, appName);
-  // Install icon for IOS
-  await installIconsIOS(appNameWithoutHyphen, appName);
-
-  // Delete gen-icon
-  const getInsideProjPath = `${appName ? `${appName}/` : ''}`;
-  await CustomPromise.execCommandLinePromise(
-    `rm -rf ./${getInsideProjPath}gen-icon/`,
-    'Delete folder gen-icon...',
-  );
-};
-
 const HandleIcon = {
-  generateAndInstallIcons,
+  generateIconAndroid,
+  generateIconIOS,
+  installIconsAndroid,
+  installIconsIOS,
 };
 
 module.exports = HandleIcon;
