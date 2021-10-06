@@ -21,7 +21,7 @@ const askOverrideBaseTemplet = async () => {
 };
 
 const askProjectName = async () => {
-  const listQuestion = ['Project name (TestProject): '];
+  const listQuestion = ['Project name (Folder name and project name in android,ios - example: TestProject): '];
   const result = await CustomPromise.promptGetListQuestionPromise(
     listQuestion,
   );
@@ -29,7 +29,7 @@ const askProjectName = async () => {
 };
 
 const askProjectDisplayName = async () => {
-  const listQuestion = ['Project display name (Test Project): '];
+  const listQuestion = ['Project display name (Name that will be displayed on mobile - example: Test Project): '];
   const result = await CustomPromise.promptGetListQuestionPromise(
     listQuestion,
   );

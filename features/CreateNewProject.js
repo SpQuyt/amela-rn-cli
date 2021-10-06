@@ -9,6 +9,7 @@ const RNConfigEnv = require('../components/config/RNConfigEnv');
 const RNConfigAndroid = require('../components/config/RNConfigAndroid');
 const RNConfigIOS = require('../components/config/RNConfigIOS');
 const LanguageAndRegion = require('../components/config/LanguageAndRegion');
+const Modalize = require('../components/config/Modalize');
 
 const currPath = './react-native-templet-v1';
 
@@ -38,7 +39,7 @@ const handleAskFirstQuestions = async () => {
   console.log(`AppCode: ${appCode}`);
   console.log(`Repo URL: ${repoURL}`);
   const askConfirmInfoOk = await Questions.askConfirmInfoOk();
-  if (askConfirmInfoOk === 'y') {
+  if (askProjectName && askProjectDisplayName && askAppCode && askRemoteURL && askConfirmInfoOk === 'y') {
     return {
       appCode,
       appName,
@@ -59,7 +60,6 @@ const exec = async () => {
     } = askQuestionsObject;
 
     // Change name and yarn install base templet
-    console.log('appName, appDisplayName, repoURL', appName, appDisplayName, repoURL);
     const installPackageBoolean = await Installation.handleInstallPackages({ appName, appDisplayName, repoURL });
     if (!installPackageBoolean) return;
 
@@ -86,6 +86,11 @@ const exec = async () => {
 
     // Setup language and region
     await LanguageAndRegion.config({ appName });
+    console.log('Done setting up language and region!');
+
+    // Setup modalize
+    await Modalize.config({ appName });
+    console.log('Done setting up modalize!');
 
     // Post setup and installation
     await PostInstallation.exec(appName, repoURL);

@@ -2,9 +2,11 @@ const CustomPromise = require('../promises');
 
 const addNewGitRemote = async ({ appName, repoURL }) => {
   const newPath = `./${appName}`;
-  await CustomPromise.execCommandLinePromise(
-    `cd ${newPath} && git init && git remote add origin ${repoURL} && git fetch --all`,
-  );
+  if (repoURL) {
+    await CustomPromise.execCommandLinePromise(
+      `cd ${newPath} && git init && git remote add origin ${repoURL} && git fetch --all`,
+    );
+  }
 };
 
 const pullMaster = async ({ appName, repoURL }) => {
