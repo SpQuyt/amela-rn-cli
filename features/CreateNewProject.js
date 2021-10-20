@@ -39,7 +39,7 @@ const handleAskFirstQuestions = async () => {
   console.log(`AppCode: ${appCode}`);
   console.log(`Repo URL: ${repoURL}`);
   const askConfirmInfoOk = await Questions.askConfirmInfoOk();
-  if (askProjectName && askProjectDisplayName && askAppCode && askRemoteURL && askConfirmInfoOk === 'y') {
+  if (askProjectName && askProjectDisplayName && askAppCode && askConfirmInfoOk === 'y') {
     return {
       appCode,
       appName,

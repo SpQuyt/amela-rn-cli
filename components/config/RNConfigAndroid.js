@@ -96,6 +96,13 @@ const config = async (
     '<item name="android:textColor">#000000</item>',
     '<item name="android:textColor">#000000</item>\n<item name="android:forceDarkAllowed">false</item>',
   );
+
+  // Fix Android build apk release file
+  CustomPromise.replaceStringFilePromise(
+    appBuildGradlePath,
+    'proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"\n        }',
+    `proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"\n        }\n\n        // This method is use to rename your release apk only\n        applicationVariants.all{\n            variant ->\n                variant.outputs.each{\n                    // On below line we are setting a name to our apk\n                    output->\n                        project.ext { appName = '${appCode}' }\n                        def formattedDate = new Date().format('yyyyMMdd-HHmm')\n                        def newName = output.outputFile.name\n                        def versionName = env.get("ANDROID_APP_VERSION_NAME")\n                        newName = newName.replace("app-", "$project.ext.appName-$formattedDate-$versionName-")\n                        output.outputFileName  = newName\n                }\n        }`,
+  );
 };
 
 const RNConfigAndroid = {
