@@ -13,7 +13,7 @@ const handleInstallPackages = async ({ appName, appDisplayName, repoURL }) => {
     await CustomPromise.gitClonePromise();
     fs.renameSync(currPath, newPath);
     if (repoURL) {
-      await CustomPromise.execCommandLinePromise(`cd ${currPath} && rm -rf .git`);
+      await CustomPromise.execCommandLinePromise(`cd ${newPath} && rm -rf .git`);
       await Git.addNewGitRemote({ appName, repoURL });
     }
     await BaseTemplet.configAndInstall({ appName, appDisplayName });
@@ -26,7 +26,7 @@ const handleInstallPackages = async ({ appName, appDisplayName, repoURL }) => {
       await CustomPromise.execCommandLinePromise(`cp -a ${currPath}/. ${newPath}/`, `Copying folder ${currPath} to ${newPath}...`);
       await CustomPromise.execCommandLinePromise(`rm -r ${currPath.replace('./', '')}`, `Removing folder ${currPath}...`);
       if (repoURL) {
-        await CustomPromise.execCommandLinePromise(`cd ${currPath} && rm -rf .git`);
+        await CustomPromise.execCommandLinePromise(`cd ${newPath} && rm -rf .git`);
         await Git.addNewGitRemote({ appName, repoURL });
       }
       await BaseTemplet.configAndInstall({ appName, appDisplayName });
