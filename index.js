@@ -20,7 +20,7 @@ const main = async () => {
     if (checkFlagResult === ArgvType.INIT) {
       await CreateNewProject.exec();
     } else if (checkFlagResult === ArgvType.ICON) {
-      await ChangeAppIcon.exec();
+      await ChangeAppIcon.exec({});
     }
   } catch (err) {
     console.log('err: ', err);
