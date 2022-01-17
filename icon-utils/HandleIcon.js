@@ -98,13 +98,19 @@ const installIconsIOS = async ({ appNameWithoutHyphen, appName }) => {
   const getInsideProjPath = `${appName ? `${appName}/` : ''}`;
   let currentAppName = appNameWithoutHyphen;
   if (!appNameWithoutHyphen) {
-    const listQuestionsAppName = [
-      'App name without hyphen (folder inside folder \'ios\')',
-    ];
-    const resultAppName = await CustomPromise.promptGetListQuestionPromise(
-      listQuestionsAppName,
-    );
-    currentAppName = resultAppName[listQuestionsAppName[0]];
+    /** Code to ask currentAppNameWithoutHyphen */
+    // const listQuestionsAppName = [
+    //   'App name without hyphen (folder inside folder \'ios\')',
+    // ];
+    // const resultAppName = await CustomPromise.promptGetListQuestionPromise(
+    //   listQuestionsAppName,
+    // );
+    // currentAppName = resultAppName[listQuestionsAppName[0]];
+    const getListDirNameInIosFolder = fs.readdirSync('./ios/', { withFileTypes: true })
+      .filter((dirent) => dirent.isDirectory())
+      .map((dirent) => dirent.name);
+    const appNameWithXcodeProj = getListDirNameInIosFolder?.find((dirName) => dirName.includes('.xcodeproj'));
+    currentAppName = appNameWithXcodeProj?.split('.')?.[0];
   }
   const sourcePath = `${getInsideProjPath}gen-icon/${iosFolderName}`;
   const destinationPath = `${getInsideProjPath}ios/${currentAppName}/Images.xcassets/${iosFolderName}`;

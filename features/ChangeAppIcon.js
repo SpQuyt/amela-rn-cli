@@ -6,7 +6,7 @@ const outputPrefix = 'gen-icon';
 
 const exec = async ({ appNameWithoutHyphen, appName }) => {
   let inputFilePath;
-  if (appNameWithoutHyphen) {
+  if (appName) {
     inputFilePath = `./${appName}/defaultIcon.jpeg`;
   } else {
     // Ask for inputPath
