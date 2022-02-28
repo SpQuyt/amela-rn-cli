@@ -5,6 +5,7 @@ const CreateNewProject = require('./features/CreateNewProject');
 const ChangeAppIcon = require('./features/ChangeAppIcon');
 const Display = require('./components/Display');
 const Argv = require('./components/Argv');
+const ChangeSplashScreen = require('./features/ChangeSplashScreen');
 
 const main = async () => {
   try {
@@ -21,6 +22,8 @@ const main = async () => {
       await CreateNewProject.exec();
     } else if (checkFlagResult === ArgvType.ICON) {
       await ChangeAppIcon.exec({});
+    } else if (checkFlagResult === ArgvType.SPLASH) {
+      await ChangeSplashScreen.exec({});
     }
   } catch (err) {
     console.log('err: ', err);
