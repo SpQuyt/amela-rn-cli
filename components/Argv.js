@@ -17,10 +17,14 @@ const handleCheckFlags = async () => {
   if (Object.keys(argv).length === 3 && argv.icon) {
     return ArgvType.ICON;
   }
+  if (Object.keys(argv).length === 3 && argv.splash) {
+    return ArgvType.SPLASH;
+  }
   console.log(`\nUsage: amela-rn-cli <flag>
       
           amela-rn-cli --init         install new project
           amela-rn-cli --icon         change icon of your project (must be inside your project)
+          amela-rn-cli --splash       add splash screen to your project (must be inside your project)
           amela-rn-cli --version      check version of your project`);
   return ArgvType.STOP;
 };
