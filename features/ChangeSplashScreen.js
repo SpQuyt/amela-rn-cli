@@ -3,12 +3,17 @@ const CustomPromise = require('../promises');
 
 const exec = async () => {
   // Ask for inputPath & backgroundColor
-  const listQuestionsInOut = ['inputFilePath (Image for splash screen - JPEG, PNG)', 'Background color for splash screen (OPTIONAL)'];
+  const listQuestionsInOut = [
+    'inputFilePath (Image for splash screen - JPEG, PNG)',
+    'Background color for splash screen (OPTIONAL)',
+    'Logo width (from 100 to 288 - OPTIONAL)',
+  ];
   const resultInOut = await CustomPromise.promptGetListQuestionPromise(
     listQuestionsInOut,
   );
   const inputFilePath = resultInOut[listQuestionsInOut[0]];
   const backgroundColor = resultInOut[listQuestionsInOut[1]] || 'FFFFFF';
+  const logoWidth = resultInOut[listQuestionsInOut[2]] || 100;
 
   // Get folder app name
   const getListDirNameInIosFolder = fs.readdirSync('./ios/', { withFileTypes: true })
@@ -111,7 +116,7 @@ const exec = async () => {
     'Installing bootsplash...',
   );
   await CustomPromise.execCommandLinePromise(
-    `yarn react-native generate-bootsplash ${inputFilePath}  --background-color=${backgroundColor}`,
+    `yarn react-native generate-bootsplash ${inputFilePath}  --background-color=${backgroundColor} --logo-width ${logoWidth}`,
     'Generating bootsplash...',
   );
 
