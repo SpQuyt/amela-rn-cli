@@ -1,37 +1,33 @@
 const fs = require('fs');
+const chalk = require('chalk');
 const CustomPromise = require('../promises');
-const Questions = require('./Questions');
-const Git = require('./Git');
 const BaseTemplet = require('./config/BaseTemplet');
 
 const currPath = './react-native-templet-v1';
 
 const handleInstallPackages = async ({ appName, appDisplayName, repoURL }) => {
   const newPath = `./${appName}`;
+  const newPathWithCLI = `./${appName}-cli`;
 
   if (!fs.existsSync(newPath)) {
     await CustomPromise.gitClonePromise();
     fs.renameSync(currPath, newPath);
+    await BaseTemplet.configAndInstall({ appName, appDisplayName });
     if (repoURL) {
       await CustomPromise.execCommandLinePromise(`cd ${newPath} && rm -rf .git`);
-      await Git.addNewGitRemote({ appName, repoURL });
+      await CustomPromise.execCommandLinePromise(`mv ${newPath} ${newPathWithCLI}`);
+      await CustomPromise.gitClonePromise(undefined, repoURL);
+      await CustomPromise.execCommandLinePromise(`cp -a ${newPathWithCLI}/. ${newPath}/`, `Copying folder ${newPathWithCLI} to ${newPath}...`);
+      await CustomPromise.execCommandLinePromise(`rm -r ${newPathWithCLI.replace('./', '')}`, `Removing folder ${newPathWithCLI}...`);
     }
-    await BaseTemplet.configAndInstall({ appName, appDisplayName });
     return true;
   }
   if (fs.existsSync(newPath)) {
-    const askQuestionOverrideRepo = await Questions.askOverrideRepo();
-    if (askQuestionOverrideRepo.toString().trim().toLowerCase() === 'y') {
-      await CustomPromise.gitClonePromise();
-      await CustomPromise.execCommandLinePromise(`cp -a ${currPath}/. ${newPath}/`, `Copying folder ${currPath} to ${newPath}...`);
-      await CustomPromise.execCommandLinePromise(`rm -r ${currPath.replace('./', '')}`, `Removing folder ${currPath}...`);
-      if (repoURL) {
-        await CustomPromise.execCommandLinePromise(`cd ${newPath} && rm -rf .git`);
-        await Git.addNewGitRemote({ appName, repoURL });
-      }
-      await BaseTemplet.configAndInstall({ appName, appDisplayName });
-      return true;
-    }
+    console.log(
+      chalk.red(
+        'Folder with same name already existed!',
+      ),
+    );
     return false;
   }
   return true;
