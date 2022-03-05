@@ -1,5 +1,6 @@
 const fs = require('fs');
 const CustomPromise = require('../promises');
+const xcode = require('../xcode-utils/pbxProject');
 
 const exec = async () => {
   // Ask for inputPath & backgroundColor
@@ -131,32 +132,42 @@ const exec = async () => {
   }
 
   /** Link project.pbxproj */
-  // // Get all information fields
-  // const pbxProjectPath = `./ios/${currentAppName}.xcodeproj/project.pbxproj`;
-  // const bootSplashStoryBoardPath = `./ios/${currentAppName}/BootSplash.storyboard`;
-  // const myProj = xcode(pbxProjectPath);
-  // await CustomPromise.parseXCodeProjectPromise(myProj);
-  // const resourceFile = await myProj.addResourceFile(
-  //   bootSplashStoryBoardPath,
-  //   {},
-  //   'Resources',
-  // );
-  // const resourceFileProcessed = await JSON.parse(
-  //   JSON.stringify(resourceFile),
-  // );
-  // const { uuid, fileRef } = resourceFileProcessed;
-  // fs.writeFileSync(pbxProjectPath, myProj.writeSync());
-  // // PBXProject file
-  // await CustomPromise.replaceStringFilePromise(
-  //   `${pbxProjectPath}`,
-  //   `13B07FAE1A68108700A75B9A /* ${currentAppName} */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (`,
-  //   `13B07FAE1A68108700A75B9A /* ${currentAppName} */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\t\t\t\t${fileRef} /* BootSplash.storyboard */,`,
-  // );
-  // await CustomPromise.replaceStringFilePromise(
-  //   `${pbxProjectPath}`,
-  //   '13B07F8E1A680F5B00A75B9A /* Resources */ = {\n\t\t\tisa = PBXResourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t\t81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,',
-  //   `13B07F8E1A680F5B00A75B9A /* Resources */ = {\n\t\t\tisa = PBXResourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t\t81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,\n\t\t\t\t${uuid} /* BootSplash.storyboard in Resources */,`,
-  // );
+  // Get all information fields
+  const pbxProjectPath = `./ios/${currentAppName}.xcodeproj/project.pbxproj`;
+  const bootSplashStoryBoardPath = `./ios/${currentAppName}/BootSplash.storyboard`;
+  const myProj = xcode(pbxProjectPath);
+  await CustomPromise.parseXCodeProjectPromise(myProj);
+  const resourceFile = await myProj.addResourceFile(
+    bootSplashStoryBoardPath,
+    {},
+    'Resources',
+  );
+  const resourceFileProcessed = await JSON.parse(
+    JSON.stringify(resourceFile),
+  );
+  const { uuid, fileRef } = resourceFileProcessed;
+  fs.writeFileSync(pbxProjectPath, myProj.writeSync());
+  // PBXProject file
+  await CustomPromise.replaceStringFilePromise(
+    `${pbxProjectPath}`,
+    `/* BootSplash.storyboard */ = {isa = PBXFileReference; name = "BootSplash.storyboard"; path = "./ios/${currentAppName}/BootSplash.storyboard"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };`,
+    '/* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = chudaibi/BootSplash.storyboard; sourceTree = "<group>"; };',
+  );
+  await CustomPromise.replaceStringFilePromise(
+    `${pbxProjectPath}`,
+    `13B07FAE1A68108700A75B9A /* ${currentAppName} */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (`,
+    `13B07FAE1A68108700A75B9A /* ${currentAppName} */ = {\n\t\t\tisa = PBXGroup;\n\t\t\tchildren = (\n\t\t\t\t${fileRef} /* BootSplash.storyboard */,`,
+  );
+  await CustomPromise.replaceStringFilePromise(
+    `${pbxProjectPath}`,
+    '13B07F8E1A680F5B00A75B9A /* Resources */ = {\n\t\t\tisa = PBXResourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t\t81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,',
+    `13B07F8E1A680F5B00A75B9A /* Resources */ = {\n\t\t\tisa = PBXResourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t\t81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,\n\t\t\t\t${uuid} /* BootSplash.storyboard in Resources */,`,
+  );
+  await CustomPromise.replaceStringFilePromise(
+    `${pbxProjectPath}`,
+    '{\n\t\t\t\t\tvalue = 78570A06BE1A4B96B4F1D407;\n\t\t\t\t\tcomment = ;\n\t\t\t\t}',
+    '78570A06BE1A4B96B4F1D407 /*   */',
+  );
 };
 
 const ChangeSplashScreen = {
