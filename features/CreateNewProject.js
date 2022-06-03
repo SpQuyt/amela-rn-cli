@@ -9,7 +9,6 @@ const RNConfigEnv = require('../components/config/RNConfigEnv');
 const RNConfigAndroid = require('../components/config/RNConfigAndroid');
 const RNConfigIOS = require('../components/config/RNConfigIOS');
 const LanguageAndRegion = require('../components/config/LanguageAndRegion');
-const Modalize = require('../components/config/Modalize');
 
 const currPath = './react-native-templet-v1';
 
@@ -87,10 +86,6 @@ const exec = async () => {
     // Setup language and region
     await LanguageAndRegion.config({ appName });
     console.log('Done setting up language and region!');
-
-    // Setup modalize
-    await Modalize.config({ appName });
-    console.log('Done setting up modalize!');
 
     // Post setup and installation
     await PostInstallation.exec(appName, repoURL);

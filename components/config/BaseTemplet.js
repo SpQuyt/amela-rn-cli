@@ -49,7 +49,7 @@ const configAndInstall = async ({ appName, appDisplayName }) => {
   await CustomPromise.replaceStringFilePromise(
     `${newPath}/package.json`,
     '"pod-install": "cd ios && pod install",',
-    `"pod-install": "cd ios && pod install",\n    "postinstall": "cd scripts && sh ./fix-lib.sh ${
+    `"pod-install": "cd ios && pod install",\n        "postinstall": "cd scripts && sh ./fix-lib.sh ${
       isWinOS ? '' : '&& cd .. && cd ios && pod install && cd ..'
     } && npx jetifier",`,
   );
