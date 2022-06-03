@@ -19,6 +19,13 @@ const config = async (
       ? 'stg'
       : 'prod';
 
+  // Changing Pod file minimum target deployment
+  await CustomPromise.replaceStringFilePromise(
+    `${appName}/ios/Podfile`,
+    /platform :ios, .*/,
+    'platform :ios, \'11.0\'',
+  );
+
   // Creating XCScheme file
   const xcschemePath = `./${appName}/ios/${appNameWithoutHyphen}.xcodeproj/xcshareddata/xcschemes/`;
   const constantXCScheme = envTypeFull === 'development'
