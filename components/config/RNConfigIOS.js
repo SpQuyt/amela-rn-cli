@@ -4,6 +4,7 @@ const fs = require('fs');
 const CustomPromise = require('../../promises');
 const Constants = require('../../constants');
 const xcode = require('../../xcode-utils/pbxProject');
+const Helpers = require('../../helpers');
 
 const config = async (
   {
@@ -12,7 +13,7 @@ const config = async (
     appDisplayName,
   },
 ) => {
-  const appNameWithoutHyphen = `${appName.trim().replace(/-/g, '').replace(/ /g, '')}`;
+  const appNameWithoutHyphen = Helpers.convertAppNameToWithoutHyphen({ appName });
   const envTypeShorten = envTypeFull === 'development'
     ? 'dev'
     : envTypeFull === 'staging'

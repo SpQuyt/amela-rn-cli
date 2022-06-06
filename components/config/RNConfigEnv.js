@@ -1,4 +1,5 @@
 /* eslint-disable no-nested-ternary */
+const Helpers = require('../../helpers');
 const CustomPromise = require('../../promises');
 
 const config = async (
@@ -9,7 +10,7 @@ const config = async (
   },
 ) => {
   const defaultAppId = 'jp.demo.app';
-  const appNameWithoutHyphen = `${appName.trim().replace(/-/g, '').replace(/ /g, '')}`;
+  const appNameWithoutHyphen = Helpers.convertAppNameToWithoutHyphen({ appName, isLowerCase: true });
   // Setup env file
   const envFilePath = `./${appName}/.env.${envTypeFull}`;
   const envTypeShorten = envTypeFull === 'development'

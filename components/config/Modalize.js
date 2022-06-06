@@ -1,8 +1,9 @@
+const Helpers = require('../../helpers');
 const CustomPromise = require('../../promises');
 
 const config = async ({ appName }) => {
-  const appNameWithoutHyphen = `${appName.trim().replace(/-/g, '').replace(/ /g, '')}`;
-  const mainActivityPath = `./${appName}/android/app/src/main/java/com/${appNameWithoutHyphen?.toLowerCase()}/MainActivity.java`;
+  const appNameWithoutHyphen = Helpers.convertAppNameToWithoutHyphen({ appName, isLowerCase: true });
+  const mainActivityPath = `./${appName}/android/app/src/main/java/com/${appNameWithoutHyphen}/MainActivity.java`;
   await CustomPromise.replaceStringFilePromise(
     mainActivityPath,
     `@Override\n  protected String getMainComponentName() {\n    return "${appName}";\n  }`,

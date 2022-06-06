@@ -1,5 +1,6 @@
 const CustomPromise = require('../../promises');
 const Constants = require('../../constants');
+const Helpers = require('../../helpers');
 
 const config = async (
   {
@@ -8,7 +9,7 @@ const config = async (
     appCode,
   },
 ) => {
-  const appNameWithoutHyphen = `${appName.trim().replace(/-/g, '').replace(/ /g, '')}`;
+  const appNameWithoutHyphen = Helpers.convertAppNameToWithoutHyphen({ appName, isLowerCase: true });
 
   // Generate keystore files
   const keyStgName = `${appCode}-staging-key.keystore`;
@@ -49,8 +50,8 @@ const config = async (
   );
   await CustomPromise.replaceStringFilePromise(
     appBuildGradlePath,
-    `defaultConfig {\n        applicationId "com.${appNameWithoutHyphen}"\n        minSdkVersion rootProject.ext.minSdkVersion\n        targetSdkVersion rootProject.ext.targetSdkVersion\n        versionCode 1\n        versionName "1.0"\n    }`,
-    `defaultConfig {\n        applicationId env.get("ANDROID_APP_ID")\n        minSdkVersion rootProject.ext.minSdkVersion\n        targetSdkVersion rootProject.ext.targetSdkVersion\n        versionCode Integer.valueOf(env.get("ANDROID_APP_VERSION_CODE"))\n        versionName env.get("ANDROID_APP_VERSION_NAME")\n        multiDexEnabled true\n        resValue "string", "build_config_package", "com.${appNameWithoutHyphen}"\n    }`,
+    `defaultConfig {\n        applicationId "com.${appNameWithoutHyphen}"\n        minSdkVersion rootProject.ext.minSdkVersion\n        targetSdkVersion rootProject.ext.targetSdkVersion\n        versionCode 1\n        versionName "1.0"\n`,
+    `defaultConfig {\n        applicationId env.get("ANDROID_APP_ID")\n        minSdkVersion rootProject.ext.minSdkVersion\n        targetSdkVersion rootProject.ext.targetSdkVersion\n        versionCode Integer.valueOf(env.get("ANDROID_APP_VERSION_CODE"))\n        versionName env.get("ANDROID_APP_VERSION_NAME")\n        multiDexEnabled true\n        resValue "string", "build_config_package", "com.${appNameWithoutHyphen}"\n`,
   );
   await CustomPromise.replaceStringFilePromise(
     appBuildGradlePath,

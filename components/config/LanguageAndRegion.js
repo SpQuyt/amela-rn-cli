@@ -1,7 +1,8 @@
+const Helpers = require('../../helpers');
 const CustomPromise = require('../../promises');
 
 const config = async ({ appName }) => {
-  const appNameWithoutHyphen = `${appName.trim().replace(/-/g, '').replace(/ /g, '')}`;
+  const appNameWithoutHyphen = Helpers.convertAppNameToWithoutHyphen({ appName });
   const infoPlistPath = `./${appName}/ios/${appNameWithoutHyphen}/Info.plist`;
   await CustomPromise.replaceStringFilePromise(
     `${infoPlistPath}`,

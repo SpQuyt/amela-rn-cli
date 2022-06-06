@@ -1,4 +1,5 @@
 const ChangeAppIcon = require('../features/ChangeAppIcon');
+const Helpers = require('../helpers');
 const CustomPromise = require('../promises');
 const Texts = require('../texts');
 const Simulator = require('./Simulator');
@@ -8,7 +9,7 @@ const isWinOS = process.platform === 'win32';
 // eslint-disable-next-line no-unused-vars
 const exec = async (appName, repoURL) => {
   // Change app icon to default AMELA icon
-  const appNameWithoutHyphen = `${appName.trim().replace(/-/g, '').replace(/ /g, '')}`;
+  const appNameWithoutHyphen = Helpers.convertAppNameToWithoutHyphen({ appName });
   await ChangeAppIcon.exec({ appNameWithoutHyphen, appName });
 
   if (!isWinOS) {

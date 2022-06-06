@@ -42,8 +42,14 @@ const checkUpdate = async () => {
   };
 };
 
+const convertAppNameToWithoutHyphen = ({ appName, isLowerCase = false }) => {
+  const appNameWithoutHyphen = `${appName.trim().replace(/-/g, '').replace(/ /g, '')}`;
+  return isLowerCase ? appNameWithoutHyphen.toLowerCase() : appNameWithoutHyphen;
+};
+
 const Helpers = {
   checkUpdate,
+  convertAppNameToWithoutHyphen,
 };
 
 module.exports = Helpers;
