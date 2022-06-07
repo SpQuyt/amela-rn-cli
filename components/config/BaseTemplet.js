@@ -35,12 +35,12 @@ const configAndInstall = async ({ appName, appDisplayName }) => {
   // Handle script postinstall
   await CustomPromise.replaceStringFilePromise(
     `${newPath}/package.json`,
-    '"postinstall": "cd scripts && sh ./fix-lib.sh && cd .. && cd ios && pod install && cd .. && npx jetifier",',
+    '"postinstall": "patch-package && yarn pod-install",',
     '',
   );
   await CustomPromise.execCommandLinePromise(
     `cd ./${appName} && yarn && npx react-native eject`,
-    `Installing libraries to ${newPath}...`,
+    `Installing libraries to ${newPath} part 1...`,
   );
   await CustomPromise.execCommandLinePromise(
     `cd ./${appName} && npx jetifier`,
@@ -48,15 +48,19 @@ const configAndInstall = async ({ appName, appDisplayName }) => {
   );
   await CustomPromise.replaceStringFilePromise(
     `${newPath}/package.json`,
-    '"pod-install": "cd ios && pod install",',
-    `"pod-install": "cd ios && pod install",\n        "postinstall": "cd scripts && sh ./fix-lib.sh ${
-      isWinOS ? '' : '&& cd .. && cd ios && pod install && cd ..'
-    } && npx jetifier",`,
+    '"pod-install": "cd ios && pod install && cd ..",',
+    `"pod-install": "cd ios && pod install && cd ..",\n        "postinstall": "patch-package ${
+      isWinOS ? ',' : '&& yarn pod-install",'
+    }`,
   );
-  // Apply fix script sh
+  await CustomPromise.replaceStringFilePromise(
+    `${newPath}/package.json`,
+    '"postinstall": "patch-package && yarn pod-install",\n        \n        "prepare": "husky install",',
+    '"postinstall": "patch-package && yarn pod-install",\n        "prepare": "husky install",',
+  );
   await CustomPromise.execCommandLinePromise(
-    `cd ./${appName} && cd scripts && sh ./fix-lib.sh`,
-    `Applying script to ${newPath}...`,
+    `cd ./${appName} && yarn`,
+    `Installing libraries to ${newPath} part 2...`,
   );
 
   if (!isWinOS) {
