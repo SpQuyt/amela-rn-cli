@@ -56,22 +56,22 @@ const config = async (
     await CustomPromise.replaceStringFilePromise(
       `${infoPlistPath}`,
       `<string>${appDisplayName}</string>`,
-      '<string>RNC_APP_NAME</string>',
+      '<string>APP_NAME</string>',
     );
     await CustomPromise.replaceStringFilePromise(
       `${infoPlistPath}`,
       '<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>',
-      '<string>RNC_IOS_APP_ID</string>',
+      '<string>IOS_APP_ID</string>',
     );
     await CustomPromise.replaceStringFilePromise(
       `${infoPlistPath}`,
       '<string>1.0</string>',
-      '<string>RNC_IOS_APP_VERSION_CODE</string>',
+      '<string>IOS_APP_VERSION_CODE</string>',
     );
     await CustomPromise.replaceStringFilePromise(
       `${infoPlistPath}`,
       '<string>1</string>',
-      '<string>RNC_IOS_APP_BUILD_CODE</string>',
+      '<string>IOS_APP_BUILD_CODE</string>',
     );
   }
 
