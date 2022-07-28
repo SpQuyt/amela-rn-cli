@@ -3,6 +3,7 @@ const ArgvType = {
   INIT: 'INIT',
   ICON: 'ICON',
   SPLASH: 'SPLASH',
+  FASTLANE: 'FASTLANE',
 };
 
 module.exports = { ArgvType };

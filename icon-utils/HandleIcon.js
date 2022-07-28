@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 const fs = require('fs');
+const Helpers = require('../helpers');
 const CustomPromise = require('../promises');
 
 const outputPrefix = 'gen-icon';
@@ -106,11 +107,7 @@ const installIconsIOS = async ({ appNameWithoutHyphen, appName }) => {
     //   listQuestionsAppName,
     // );
     // currentAppName = resultAppName[listQuestionsAppName[0]];
-    const getListDirNameInIosFolder = fs.readdirSync('./ios/', { withFileTypes: true })
-      .filter((dirent) => dirent.isDirectory())
-      .map((dirent) => dirent.name);
-    const appNameWithXcodeProj = getListDirNameInIosFolder?.find((dirName) => dirName.includes('.xcodeproj'));
-    currentAppName = appNameWithXcodeProj?.split('.')?.[0];
+    currentAppName = Helpers.getIosAppNameFolderFromRootFolder();
   }
   const sourcePath = `${getInsideProjPath}gen-icon/${iosFolderName}`;
   const destinationPath = `${getInsideProjPath}ios/${currentAppName}/Images.xcassets/${iosFolderName}`;

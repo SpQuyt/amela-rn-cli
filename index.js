@@ -6,6 +6,7 @@ const ChangeAppIcon = require('./features/ChangeAppIcon');
 const Display = require('./components/Display');
 const Argv = require('./components/Argv');
 const ChangeSplashScreen = require('./features/ChangeSplashScreen');
+const SetupFastlane = require('./features/SetupFastlane');
 
 const main = async () => {
   try {
@@ -24,6 +25,8 @@ const main = async () => {
       await ChangeAppIcon.exec({});
     } else if (checkFlagResult === ArgvType.SPLASH) {
       await ChangeSplashScreen.exec({});
+    } else if (checkFlagResult === ArgvType.FASTLANE) {
+      await SetupFastlane.exec();
     }
   } catch (err) {
     console.log('err: ', err);

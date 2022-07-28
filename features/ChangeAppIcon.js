@@ -1,4 +1,5 @@
 const fs = require('fs');
+const Questions = require('../components/Questions');
 const HandleIcon = require('../icon-utils/HandleIcon');
 const CustomPromise = require('../promises');
 
@@ -10,11 +11,10 @@ const exec = async ({ appNameWithoutHyphen, appName }) => {
     inputFilePath = `./${appName}/defaultIcon.jpeg`;
   } else {
     // Ask for inputPath
-    const listQuestionsInOut = ['inputFilePath (Image to generate app icon - JPEG, PNG)'];
-    const resultInOut = await CustomPromise.promptGetListQuestionPromise(
-      listQuestionsInOut,
-    );
-    inputFilePath = resultInOut[listQuestionsInOut[0]];
+    inputFilePath = await Questions.askPathToExecuteCLI({
+      question: 'Image path to generate app icon - JPEG, PNG? (Example: ./assets/images/defaultIcon.jpeg)',
+      defaultPath: './defaultIcon.jpeg',
+    });
   }
 
   // Get output prefix folder

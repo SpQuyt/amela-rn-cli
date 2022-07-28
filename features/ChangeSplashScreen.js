@@ -1,12 +1,13 @@
 const fs = require('fs');
+const Helpers = require('../helpers');
 const CustomPromise = require('../promises');
 const xcode = require('../xcode-utils/pbxProject');
 
 const exec = async () => {
   // Ask for inputPath & backgroundColor
   const listQuestionsInOut = [
-    'inputFilePath (Image for splash screen - JPEG, PNG)',
-    'Background color for splash screen (OPTIONAL)',
+    'Image path for splash screen - JPEG, PNG (Example: ./assets/image/splash.jpeg)',
+    'Background color for splash screen, can be string or hex-code (OPTIONAL)',
     'Logo width (from 100 to 288 - OPTIONAL)',
   ];
   const resultInOut = await CustomPromise.promptGetListQuestionPromise(
@@ -17,11 +18,7 @@ const exec = async () => {
   const logoWidth = resultInOut[listQuestionsInOut[2]] || 100;
 
   // Get folder app name
-  const getListDirNameInIosFolder = fs.readdirSync('./ios/', { withFileTypes: true })
-    .filter((dirent) => dirent.isDirectory())
-    .map((dirent) => dirent.name);
-  const appNameWithXcodeProj = getListDirNameInIosFolder?.find((dirName) => dirName.includes('.xcodeproj'));
-  const currentAppName = appNameWithXcodeProj?.split('.')?.[0];
+  const currentAppName = Helpers.getIosAppNameFolderFromRootFolder();
 
   /** Android */
   // build.gradle
