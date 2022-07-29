@@ -3,6 +3,7 @@ const boxen = require('boxen');
 const semver = require('semver');
 const pkgJson = require('package-json');
 const chalk = require('chalk');
+const fs = require('fs');
 
 const { name, version } = require('./package.json');
 
@@ -47,9 +48,19 @@ const convertAppNameToWithoutHyphen = ({ appName, isLowerCase = false }) => {
   return isLowerCase ? appNameWithoutHyphen.toLowerCase() : appNameWithoutHyphen;
 };
 
+const getIosAppNameFolderFromRootFolder = () => {
+  const getListDirNameInIosFolder = fs.readdirSync('./ios/', { withFileTypes: true })
+    .filter((dirent) => dirent.isDirectory())
+    .map((dirent) => dirent.name);
+  const appNameWithXcodeProj = getListDirNameInIosFolder?.find((dirName) => dirName.includes('.xcodeproj'));
+  const currentAppName = appNameWithXcodeProj?.split('.')?.[0];
+  return currentAppName;
+};
+
 const Helpers = {
   checkUpdate,
   convertAppNameToWithoutHyphen,
+  getIosAppNameFolderFromRootFolder,
 };
 
 module.exports = Helpers;
