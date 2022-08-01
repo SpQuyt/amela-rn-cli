@@ -49,7 +49,12 @@ const convertAppNameToWithoutHyphen = ({ appName, isLowerCase = false }) => {
 };
 
 const getIosAppNameFolderFromRootFolder = () => {
-  const getListDirNameInIosFolder = fs.readdirSync('./ios/', { withFileTypes: true })
+  const defaultIosFolderPath = './ios/';
+
+  const isIosFolderExisted = fs.existsSync(defaultIosFolderPath);
+  if (!isIosFolderExisted) return '';
+
+  const getListDirNameInIosFolder = fs.readdirSync(defaultIosFolderPath, { withFileTypes: true })
     .filter((dirent) => dirent.isDirectory())
     .map((dirent) => dirent.name);
   const appNameWithXcodeProj = getListDirNameInIosFolder?.find((dirName) => dirName.includes('.xcodeproj'));
@@ -57,10 +62,22 @@ const getIosAppNameFolderFromRootFolder = () => {
   return currentAppName;
 };
 
+const cutOffExcludedSymbolsFromString = ({ valueString, excludeSymbolsArr }) => {
+  let valueStringExcludeSymbol = valueString;
+  if (!valueStringExcludeSymbol) return '';
+  if (!excludeSymbolsArr) return valueString;
+  excludeSymbolsArr.forEach((exSymItem) => {
+    const regEx = new RegExp(`\\${exSymItem}`, 'g');
+    valueStringExcludeSymbol = valueStringExcludeSymbol.replace(regEx, '');
+  });
+  return valueStringExcludeSymbol;
+};
+
 const Helpers = {
   checkUpdate,
   convertAppNameToWithoutHyphen,
   getIosAppNameFolderFromRootFolder,
+  cutOffExcludedSymbolsFromString,
 };
 
 module.exports = Helpers;
