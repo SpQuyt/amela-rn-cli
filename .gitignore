@@ -111,4 +111,4 @@ package-lock.json
 *.lock
 
 .vscode
-.env.*
+TestProject
