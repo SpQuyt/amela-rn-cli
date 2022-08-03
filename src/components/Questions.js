@@ -113,14 +113,14 @@ const askFastlaneConfig = async () => {
   });
   const cert_output_folder = await askQuestion1Answer({
     question: 'Folder in Download folder to save certificates (No spaces, no special symbols except "_"). Example: Test_Project_Cert: ',
-    onValidate: (valueString) => CustomValidation.checkCertFolderPath({ valueString }),
+    onValidate: (valueString) => CustomValidation.checkCertFolderPath({ valueString, excludeSymbolsArr: ['_'] }),
   });
   const app_identifier_dev = await askQuestion1Answer({
-    question: 'iOS Bundle ID for DEV environment (Starts with com.amela. No spaces, no special symbols except dots "."). Example: com.amela.test.dev): ',
+    question: 'iOS Bundle ID for DEV environment (Starts with com.amela. No spaces, no special symbols except dots ".") Example: com.amela.test.dev: ',
     onValidate: (valueString) => CustomValidation.checkBundleIdentifier({ valueString }),
   });
   const app_identifier_stg = await askQuestion1Answer({
-    question: 'iOS Bundle ID for STAGING environment (Starts with com.amela. No spaces, no special symbols except dots "."). Example: com.amela.test.stg): ',
+    question: 'iOS Bundle ID for STAGING environment (Starts with com.amela. No spaces, no special symbols except dots ".") Example: com.amela.test.stg: ',
     onValidate: (valueString) => CustomValidation.checkBundleIdentifier({ valueString }),
   });
   return {
@@ -128,6 +128,26 @@ const askFastlaneConfig = async () => {
     cert_output_folder: `~/Downloads/${cert_output_folder}`,
     app_identifier_dev,
     app_identifier_stg,
+  };
+};
+
+const askSplashConfig = async () => {
+  const inputFilePath = await askQuestion1Answer({
+    question: 'Image path for splash screen - JPEG, PNG (No spaces, no special symbols except "_", ".", "/") - Example: ./assets/image/splash.jpeg: ',
+    onValidate: (valueString) => CustomValidation.checkImageFilePath({ valueString }),
+  });
+  const backgroundColor = await askQuestion1Answer({
+    question: 'Background color for splash screen, (Must be hex-code 6 characters. By default, the color is FFFFFF) - Example: FFFFFF: ',
+    onValidate: (valueString) => CustomValidation.checkColorCode({ valueString, defaultValue: 'FFFFFF' }),
+  });
+  const logoWidth = await askQuestion1Answer({
+    question: 'Logo width (Must be a number from 100 to 288. By default the number is 100) - Example: 125: ',
+    onValidate: (valueString) => CustomValidation.checkLogoWidth({ valueString, defaultValue: '100' }),
+  });
+  return {
+    inputFilePath,
+    backgroundColor,
+    logoWidth,
   };
 };
 
@@ -141,6 +161,7 @@ const Questions = {
   askConfirmInfoOk,
   askFastlaneConfig,
   askPathToExecuteCLI,
+  askSplashConfig,
 };
 
 module.exports = Questions;

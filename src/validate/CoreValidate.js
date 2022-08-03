@@ -144,6 +144,54 @@ const checkYesNo = ({ valueString }) => {
   return resultValidate;
 };
 
+const checkNumericOnly = ({ valueString, excludeSymbolsArr }) => {
+  const resultValidate = commonCoreCheckFunction({
+    valueString,
+    errors: [MessageValidation.numericOnly()],
+    excludeSymbolsArr,
+    regexTest: RegexConst.stringContainsNumericOnly,
+  });
+  return resultValidate;
+};
+
+const checkNumberFitForRange = ({
+  valueString, excludeSymbolsArr, max, min,
+}) => {
+  const resultValidate = commonCoreCheckFunction({
+    valueString,
+    errors: [MessageValidation.numberInRange(max, min)],
+    excludeSymbolsArr,
+    validateFunc: () => {
+      if (!valueString || Number.isNaN(Number(valueString))) {
+        return { isValidated: false };
+      }
+      if (Number(valueString) >= min && Number(valueString) <= max) {
+        return { isValidated: true };
+      }
+      return { isValidated: false };
+    },
+  });
+  return resultValidate;
+};
+
+const checkRegexRelativeFilePath = ({ valueString }) => {
+  const resultValidate = commonCoreCheckFunction({
+    valueString,
+    errors: [MessageValidation.relativePath()],
+    regexTest: RegexConst.filePathMatch,
+  });
+  return resultValidate;
+};
+
+const checkRegexHexColorCode = ({ valueString }) => {
+  const resultValidate = commonCoreCheckFunction({
+    valueString,
+    errors: [MessageValidation.hexColorCode()],
+    regexTest: RegexConst.hexColorMatch,
+  });
+  return resultValidate;
+};
+
 const CoreValidation = {
   checkRegexSuitable,
   checkFilled,
@@ -155,6 +203,10 @@ const CoreValidation = {
   checkYesNo,
   checkPrefix,
   checkNoSpaces,
+  checkNumericOnly,
+  checkNumberFitForRange,
+  checkRegexRelativeFilePath,
+  checkRegexHexColorCode,
 };
 
 module.exports = CoreValidation;
