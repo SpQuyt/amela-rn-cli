@@ -7,7 +7,7 @@ const exec = async () => {
   // Ask for inputPath & backgroundColor
   const listQuestionsInOut = [
     'Image path for splash screen - JPEG, PNG (Example: ./assets/image/splash.jpeg)',
-    'Background color for splash screen, can be string or hex-code (OPTIONAL)',
+    'Background color for splash screen, must be hex-code 6 characters (Example: FFFFFF) (OPTIONAL - by default, the color is WHITE)',
     'Logo width (from 100 to 288 - OPTIONAL)',
   ];
   const resultInOut = await CustomPromise.promptGetListQuestionPromise(
@@ -88,15 +88,15 @@ const exec = async () => {
     'platform :ios, \'11.0\'',
   );
   // AppDelegate
-  const iosAppDelegateReadFile = await CustomPromise.readFilePromise(`./ios/${currentAppName}/AppDelegate.m`);
+  const iosAppDelegateReadFile = await CustomPromise.readFilePromise(`./ios/${currentAppName}/AppDelegate.mm`);
   if (!iosAppDelegateReadFile.includes('RNBootSplash')) {
     await CustomPromise.replaceStringFilePromise(
-      `./ios/${currentAppName}/AppDelegate.m`,
+      `./ios/${currentAppName}/AppDelegate.mm`,
       '#import <React/RCTRootView.h>',
       '#import <React/RCTRootView.h>\n#import "RNBootSplash.h"',
     );
     await CustomPromise.replaceStringFilePromise(
-      `./ios/${currentAppName}/AppDelegate.m`,
+      `./ios/${currentAppName}/AppDelegate.mm`,
       '[self.window makeKeyAndVisible];',
       '[self.window makeKeyAndVisible];\n[RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView];',
     );

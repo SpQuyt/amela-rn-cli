@@ -1,6 +1,6 @@
 {
   "name": "amela-rn-cli",
-  "version": "0.5.9",
+  "version": "0.5.33",
   "description": "AMELA react-native CLI",
   "main": "index.js",
   "scripts": {
@@ -8,10 +8,13 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint-fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "prepare": "husky install",
-    "dev": "NODE_ENV=development babel-node index.js --init",
-    "dev-fastlane": "NODE_ENV=development babel-node index.js --fastlane",
-    "prod": "babel-node index.js --init",
-    "prod-fastlane": "babel-node index.js --fastlane"
+    "start": "node index.js",
+    "dev": "NODE_ENV=development node index.js --init",
+    "dev-version": "NODE_ENV=development node index.js --version",
+    "dev-fastlane": "NODE_ENV=development node index.js --fastlane",
+    "prod": "node index.js --init",
+    "prod-fastlane": "node index.js --fastlane",
+    "prod-version": "node index.js --version"
   },
   "repository": {
     "type": "git",
@@ -36,6 +39,7 @@
     "inquirer": "^8.1.1",
     "lodash": "^4.17.21",
     "minimist": "^1.2.5",
+    "module-alias": "^2.2.2",
     "node-keytool": "^0.0.3",
     "package-json": "^6.5.0",
     "prompt": "^1.1.0",
@@ -48,13 +52,6 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.18.10",
-    "@babel/core": "^7.18.10",
-    "@babel/node": "^7.18.10",
-    "@babel/preset-env": "^7.18.10",
-    "@babel/runtime": "^7.18.9",
-    "babel-jest": "^28.1.0",
-    "babel-plugin-module-resolver": "^4.1.0",
     "eslint": "^8.15.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-import-resolver-node": "^0.3.6",
@@ -74,5 +71,16 @@
       "json",
       "node"
     ]
+  },
+  "_moduleAliases": {
+    "src": "./src",
+    "components": "./src/components",
+    "features": "./src/features",
+    "utils": "./src/utils",
+    "keytool-utils": "./src/keytool-utils",
+    "xcode-utils": "./src/xcode-utils",
+    "icon-utils": "./src/icon-utils",
+    "fastlane-utils": "./src/fastlane-utils",
+    "validate": "./src/validate"
   }
 }
