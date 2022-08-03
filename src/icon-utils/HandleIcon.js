@@ -99,14 +99,6 @@ const installIconsIOS = async ({ appNameWithoutHyphen, appName }) => {
   const getInsideProjPath = `${appName ? `${appName}/` : ''}`;
   let currentAppName = appNameWithoutHyphen;
   if (!appNameWithoutHyphen) {
-    /** Code to ask currentAppNameWithoutHyphen */
-    // const listQuestionsAppName = [
-    //   'App name without hyphen (folder inside folder \'ios\')',
-    // ];
-    // const resultAppName = await CustomPromise.promptGetListQuestionPromise(
-    //   listQuestionsAppName,
-    // );
-    // currentAppName = resultAppName[listQuestionsAppName[0]];
     currentAppName = Helpers.getIosAppNameFolderFromRootFolder();
   }
   const sourcePath = `${getInsideProjPath}gen-icon/${iosFolderName}`;

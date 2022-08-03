@@ -1,12 +1,13 @@
-#!/usr/bin/env babel-node
+#!/usr/bin/env node
+require('module-alias/register');
 
-const { ArgvType } = require('utils/enums');
 const CreateNewProject = require('features/CreateNewProject');
 const ChangeAppIcon = require('features/ChangeAppIcon');
 const Display = require('components/Display');
 const Argv = require('components/Argv');
 const ChangeSplashScreen = require('features/ChangeSplashScreen');
 const SetupFastlane = require('features/SetupFastlane');
+const { ArgvType } = require('utils/enums');
 
 const main = async () => {
   try {
