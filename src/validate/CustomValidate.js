@@ -95,6 +95,56 @@ const checkProjectDisplayName = ({ valueString }) => {
   return resultValidate;
 };
 
+const checkImageFilePath = ({ valueString }) => {
+  const resultValidate = commonCustomCheckFunction({
+    validateArr: [
+      CoreValidation.checkFilled({ valueString }),
+      CoreValidation.checkNoSpaces({ valueString }),
+      CoreValidation.checkRegexRelativeFilePath({ valueString }),
+      CoreValidation.checkNoSpecialSymbols({ valueString, excludeSymbolsArr: ['_', '.', '/'] }),
+    ],
+  });
+  return resultValidate;
+};
+
+const checkColorCode = ({ valueString, defaultValue }) => {
+  if (!valueString && !!defaultValue) {
+    return {
+      isValidated: true,
+      errors: [],
+    };
+  }
+  const resultValidate = commonCustomCheckFunction({
+    validateArr: [
+      CoreValidation.checkFilled({ valueString }),
+      CoreValidation.checkNoSpaces({ valueString }),
+      CoreValidation.checkNoSpecialSymbols({ valueString }),
+      CoreValidation.checkRegexHexColorCode({ valueString }),
+      CoreValidation.checkLength({ valueString, maxLength: 6, minLength: 6 }),
+    ],
+  });
+  return resultValidate;
+};
+
+const checkLogoWidth = ({ valueString, defaultValue }) => {
+  if (!valueString && !!defaultValue) {
+    return {
+      isValidated: true,
+      errors: [],
+    };
+  }
+  const resultValidate = commonCustomCheckFunction({
+    validateArr: [
+      CoreValidation.checkFilled({ valueString }),
+      CoreValidation.checkNoSpaces({ valueString }),
+      CoreValidation.checkNoSpecialSymbols({ valueString }),
+      CoreValidation.checkNumericOnly({ valueString }),
+      CoreValidation.checkNumberFitForRange({ valueString, min: 100, max: 288 }),
+    ],
+  });
+  return resultValidate;
+};
+
 const CustomValidation = {
   checkTeamsUrl,
   checkCertFolderPath,
@@ -102,6 +152,9 @@ const CustomValidation = {
   checkAppCode,
   checkProjectName,
   checkProjectDisplayName,
+  checkImageFilePath,
+  checkColorCode,
+  checkLogoWidth,
 };
 
 module.exports = CustomValidation;

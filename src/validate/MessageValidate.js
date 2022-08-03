@@ -7,7 +7,7 @@ const MessageValidation = {
   noSpecialSymbol: ({ excludeSymbolsArr }) => {
     const errorMessage = 'Must not contain any special symbols';
     if (excludeSymbolsArr) {
-      const lastPhrase = `except ${excludeSymbolsArr.join(', ')}`;
+      const lastPhrase = `except ${excludeSymbolsArr.join(' ')}`;
       return `${errorMessage}, ${lastPhrase}`;
     }
     return errorMessage;
@@ -15,9 +15,13 @@ const MessageValidation = {
   lowercaseAlphabetOnly: () => 'LOWERCASE alphabetic characters only',
   uppercaseAlphabetOnly: () => 'UPPERCASE alphabetic characters only',
   alphabetOnly: () => 'Alphabetic characters only',
+  numericOnly: () => 'Numbers only',
+  numberInRange: (max, min) => `Value must be ${min} <= value <= ${max}`,
   confirmYesNo: () => '"y" or "n" only',
   containsPrefix: (prefix) => `Must start with ${prefix}`,
   noSpaces: () => 'No spaces',
+  relativePath: () => 'Must have format ./abc/def or ./abc/def/xyz.qwe',
+  hexColorCode: () => 'Must have right format ( https://www.pluralsight.com/blog/tutorials/understanding-hexadecimal-colors-simple )',
 
   // Custom Validation
   teamsUrl: () => 'Not a right formatted URL [starts with http://, https://, ftp://] - [ends with .com, .vn, ...]',

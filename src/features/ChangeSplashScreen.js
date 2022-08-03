@@ -1,3 +1,4 @@
+const Questions = require('components/Questions');
 const fs = require('fs');
 const Helpers = require('utils/helpers');
 const CustomPromise = require('utils/promises');
@@ -5,18 +6,7 @@ const xcode = require('xcode-utils/pbxProject');
 
 const exec = async () => {
   // Ask for inputPath & backgroundColor
-  const listQuestionsInOut = [
-    'Image path for splash screen - JPEG, PNG (Example: ./assets/image/splash.jpeg)',
-    'Background color for splash screen, must be hex-code 6 characters (Example: FFFFFF) (OPTIONAL - by default, the color is WHITE)',
-    'Logo width (from 100 to 288 - OPTIONAL)',
-  ];
-  const resultInOut = await CustomPromise.promptGetListQuestionPromise(
-    listQuestionsInOut,
-  );
-  const inputFilePath = resultInOut[listQuestionsInOut[0]];
-  const backgroundColor = resultInOut[listQuestionsInOut[1]] || 'FFFFFF';
-  const logoWidth = resultInOut[listQuestionsInOut[2]] || 100;
-
+  const { inputFilePath, backgroundColor, logoWidth } = await Questions.askSplashConfig();
   // Get folder app name
   const currentAppName = Helpers.getIosAppNameFolderFromRootFolder();
 
