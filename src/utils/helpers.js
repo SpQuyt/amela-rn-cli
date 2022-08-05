@@ -1,3 +1,4 @@
+/* eslint-disable no-promise-executor-return */
 const semverDiff = require('semver-diff');
 const boxen = require('boxen');
 const semver = require('semver');
@@ -74,11 +75,27 @@ const cutOffExcludedSymbolsFromString = ({ valueString, excludeSymbolsArr }) => 
   return valueStringExcludeSymbol;
 };
 
+const sleep = (msec) => new Promise((resolve) => setTimeout(resolve, msec));
+
+const replaceWarning = (wholeString) => wholeString
+  .replace(/\bWarning\b/g, chalk.bold.yellow('Warning'))
+  .replace(/\bwarning\b/g, chalk.bold.yellow('warning'))
+  .replace(/\bwarnings\b/g, chalk.bold.yellow('warnings'))
+  .replace(/\bWarning\b/g, chalk.bold.yellow('Warnings'));
+
+const replaceError = (wholeString) => wholeString
+  .replace(/\b\*\*ERROR\*\*\b/g, chalk.bold.red('**ERROR**'))
+  .replace(/\berrors\b/g, chalk.bold.red('errors'))
+  .replace(/\berror\b/g, chalk.bold.red('error'));
+
 const Helpers = {
   checkUpdate,
   convertAppNameToWithoutHyphen,
   getIosAppNameFolderFromRootFolder,
   cutOffExcludedSymbolsFromString,
+  sleep,
+  replaceWarning,
+  replaceError,
 };
 
 module.exports = Helpers;

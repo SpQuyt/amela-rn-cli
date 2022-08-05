@@ -36,7 +36,7 @@ const generateIconIOS = async ({ inputFilePath, appName }) => {
     '',
     '{\n   "images":[\n      {\n         "size":"60x60",\n         "expected-size":"180",\n         "filename":"180.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"iphone",\n         "scale":"3x"\n      },\n      {\n         "size":"40x40",\n         "expected-size":"80",\n         "filename":"80.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"iphone",\n         "scale":"2x"\n      },\n      {\n         "size":"40x40",\n         "expected-size":"120",\n         "filename":"120.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"iphone",\n         "scale":"3x"\n      },\n      {\n         "size":"60x60",\n         "expected-size":"120",\n         "filename":"120.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"iphone",\n         "scale":"2x"\n      },\n      {\n         "size":"57x57",\n         "expected-size":"57",\n         "filename":"57.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"iphone",\n         "scale":"1x"\n      },\n      {\n         "size":"29x29",\n         "expected-size":"58",\n         "filename":"58.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"iphone",\n         "scale":"2x"\n      },\n      {\n         "size":"29x29",\n         "expected-size":"29",\n         "filename":"29.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"iphone",\n         "scale":"1x"\n      },\n      {\n         "size":"29x29",\n         "expected-size":"87",\n         "filename":"87.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"iphone",\n         "scale":"3x"\n      },\n      {\n         "size":"57x57",\n         "expected-size":"114",\n         "filename":"114.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"iphone",\n         "scale":"2x"\n      },\n      {\n         "size":"20x20",\n         "expected-size":"40",\n         "filename":"40.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"iphone",\n         "scale":"2x"\n      },\n      {\n         "size":"20x20",\n         "expected-size":"60",\n         "filename":"60.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"iphone",\n         "scale":"3x"\n      },\n      {\n         "size":"1024x1024",\n         "filename":"1024.png",\n         "expected-size":"1024",\n         "idiom":"ios-marketing",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "scale":"1x"\n      },\n      {\n         "size":"40x40",\n         "expected-size":"80",\n         "filename":"80.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"ipad",\n         "scale":"2x"\n      },\n      {\n         "size":"72x72",\n         "expected-size":"72",\n         "filename":"72.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"ipad",\n         "scale":"1x"\n      },\n      {\n         "size":"76x76",\n         "expected-size":"152",\n         "filename":"152.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"ipad",\n         "scale":"2x"\n      },\n      {\n         "size":"50x50",\n         "expected-size":"100",\n         "filename":"100.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"ipad",\n         "scale":"2x"\n      },\n      {\n         "size":"29x29",\n         "expected-size":"58",\n         "filename":"58.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"ipad",\n         "scale":"2x"\n      },\n      {\n         "size":"76x76",\n         "expected-size":"76",\n         "filename":"76.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"ipad",\n         "scale":"1x"\n      },\n      {\n         "size":"29x29",\n         "expected-size":"29",\n         "filename":"29.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"ipad",\n         "scale":"1x"\n      },\n      {\n         "size":"50x50",\n         "expected-size":"50",\n         "filename":"50.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"ipad",\n         "scale":"1x"\n      },\n      {\n         "size":"72x72",\n         "expected-size":"144",\n         "filename":"144.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"ipad",\n         "scale":"2x"\n      },\n      {\n         "size":"40x40",\n         "expected-size":"40",\n         "filename":"40.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"ipad",\n         "scale":"1x"\n      },\n      {\n         "size":"83.5x83.5",\n         "expected-size":"167",\n         "filename":"167.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"ipad",\n         "scale":"2x"\n      },\n      {\n         "size":"20x20",\n         "expected-size":"20",\n         "filename":"20.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"ipad",\n         "scale":"1x"\n      },\n      {\n         "size":"20x20",\n         "expected-size":"40",\n         "filename":"40.png",\n         "folder":"Assets.xcassets/AppIcon.appiconset/",\n         "idiom":"ipad",\n         "scale":"2x"\n      }\n   ]\n}\n',
   );
-  console.log('Done generating iOS icons!');
+  console.log('✅ ✅ ✅  Done generating iOS icons!');
 };
 
 const generateIconAndroid = async ({ inputFilePath, appName }) => {
@@ -92,7 +92,7 @@ const generateIconAndroid = async ({ inputFilePath, appName }) => {
       true,
     );
   }
-  console.log('Done generating Android icons!');
+  console.log('✅ ✅ ✅  Done generating Android icons!');
 };
 
 const installIconsIOS = async ({ appNameWithoutHyphen, appName }) => {
@@ -111,7 +111,7 @@ const installIconsIOS = async ({ appNameWithoutHyphen, appName }) => {
     `cp -a ./${sourcePath}/. ./${destinationPath}/`,
     'Installing icon IOS...',
   );
-  console.log('Done installing iOS icons!');
+  console.log('✅ ✅ ✅  Done installing iOS icons!');
 };
 
 const installIconsAndroid = async ({ appName }) => {
@@ -134,7 +134,7 @@ const installIconsAndroid = async ({ appName }) => {
       `Installing icon android ${folderItem}`,
     );
   }
-  console.log('Done installing Android icons!');
+  console.log('✅ ✅ ✅  Done installing Android icons!');
 };
 
 const HandleIcon = {

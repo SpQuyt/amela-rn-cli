@@ -2,6 +2,7 @@
 /* eslint-disable camelcase */
 const chalk = require('chalk');
 const CustomPromise = require('utils/promises');
+const Texts = require('utils/texts');
 const CoreValidation = require('validate/CoreValidate');
 const CustomValidation = require('validate/CustomValidate');
 
@@ -26,6 +27,15 @@ const askQuestion1Answer = async ({ question, onValidate }) => {
       validateObject = onValidate(answer);
     }
   }
+  return answer;
+};
+
+const askQuestionYesNo = async ({ question }) => {
+  const answerObj = await CustomPromise.getRadioButtonAnswerPromise(
+    question,
+    [Texts.yes, Texts.no],
+  );
+  const answer = answerObj[question];
   return answer;
 };
 
@@ -151,7 +161,29 @@ const askSplashConfig = async () => {
   };
 };
 
+const askCodepushConfig = async () => {
+  const codepushAppName = await askQuestion1Answer({
+    question: 'App name on AppCenter Codepush (No spaces, no special symbols except "-") - Example: testproject, test-project: ',
+    onValidate: (valueString) => CustomValidation.checkCodepushAppName({ valueString }),
+  });
+  return {
+    codepushAppName,
+  };
+};
+
+const askAppCenterApiKey = async () => {
+  const apiKey = await askQuestion1Answer({
+    question: `Please copy and paste API Key with ${chalk.bold.white('Full Access')} permission.\nIf you don't have any, create one on ${chalk.bold.blue('https://appcenter.ms/settings/apitokens')}: `,
+    onValidate: (valueString) => CoreValidation.checkFilled({ valueString }),
+  });
+  return {
+    apiKey,
+  };
+};
+
 const Questions = {
+  askQuestion1Answer,
+  askQuestionYesNo,
   askOverrideRepo,
   askOverrideBaseTemplet,
   askProjectName,
@@ -162,6 +194,8 @@ const Questions = {
   askFastlaneConfig,
   askPathToExecuteCLI,
   askSplashConfig,
+  askCodepushConfig,
+  askAppCenterApiKey,
 };
 
 module.exports = Questions;

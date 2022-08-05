@@ -11,6 +11,7 @@
     -   2. Change app icon
     -   3. Change splash screen (BETA)
     -   4. Setup Fastlane
+    -   5. Setup Codepush
 
 # A. Purposes
 * Automatically creating react-native project from template [AMELA React Native Template](https://github.com/amela-technology/react-native-templet-v1).
@@ -18,10 +19,11 @@
 * Automatically changing app's icon.
 * Automatically changing app's splash screen (BETA mode).
 * Automatically setting up Fastlane.
+* Automatically setting up Codepush.
 
 # B. Notes
 * Work best on macOS and Hackintosh.
-* Windows can be buggy sometimes (not recommended for Windows).
+* ❗ Windows not available yet!
 # C. Getting started
 ## 1. Installation
 `$ npm install -g -f amela-rn-cli`
@@ -135,3 +137,31 @@
 ![](assetsReadme/fastlaneSetup/10.24.25.png)
 
 * Enjoy!
+---
+
+## 5. Setup Codepush
+#### 5.1. NOTE
+- **ONLY use this feature if you know how to use Appcenter Codepush.**
+- **Make sure you have Microsoft Appcenter account!**
+- **Must be inside a react-native project.**
+#### 5.2. EXECUTE (2 ways)
+#### A. Choose "Yes" after running `amela-rn-cli --init`
+![](assetsReadme/codepush/16.32.00.png)
+
+#### B. Using feature from Amela-rn-cli
+* Run command line `$ amela-rn-cli --codepush`. 
+![](assetsReadme/codepush/15.49.16.png)
+
+* Type in Appcenter Codepush App's name.
+
+* Type in Appcenter API Key.
+![](assetsReadme/codepush/15.49.29.png)
+![](assetsReadme/codepush/15.50.49.png)
+
+* Waiting and check files changes.
+![](assetsReadme/codepush/15.55.58.png)
+![](assetsReadme/codepush/16.14.08.png)
+![](assetsReadme/codepush/15.56.54.png)
+
+* Enjoy!
+

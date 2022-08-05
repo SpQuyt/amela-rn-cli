@@ -10,6 +10,8 @@ const KeyStorePassword = 'amela@123';
 
 const PackageJsonObj = require('../../package.json');
 
+const APIKey = '7921da1fa1babdfb8986a20ce623f2ed2850ecb1';
+
 const Constants = {
   IDEWorkspaceString,
   locationWhenInUseString,
@@ -19,6 +21,7 @@ const Constants = {
   XCConfigString,
   KeyStorePassword,
   PackageJsonObj,
+  APIKey,
 };
 
 module.exports = Constants;

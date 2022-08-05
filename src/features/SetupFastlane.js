@@ -53,7 +53,7 @@ const exec = async (appNameWithoutHyphen) => {
       .replace(/app_identifier_dev = \"\"/g, `app_identifier_dev = \"${app_identifier_dev}\"`)
       .replace(/app_identifier_stg = \"\"/g, `app_identifier_stg = \"${app_identifier_stg}\"`),
   );
-  console.log('Done setting up Fastlane!');
+  console.log('✅ ✅ ✅  Done setting up Fastlane!');
 };
 
 const SetupFastlane = {

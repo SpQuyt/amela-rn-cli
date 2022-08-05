@@ -70,17 +70,17 @@ const processExec = async ({
 
   // Setup RNConfigAndroid
   await RNConfigAndroid.config({ appName, appDisplayName, appCode });
-  console.log('Done setting up react-native-config Android!');
+  console.log('✅ ✅ ✅  Done setting up react-native-config Android!');
 
   // Setup RNConfigIOS
   await RNConfigIOS.config({ envTypeFull: 'development', appName, appDisplayName });
   await RNConfigIOS.config({ envTypeFull: 'staging', appName, appDisplayName });
   await RNConfigIOS.config({ envTypeFull: 'production', appName, appDisplayName });
-  console.log('Done setting up react-native-config iOS!');
+  console.log('✅ ✅ ✅  Done setting up react-native-config iOS!');
 
   // Setup language and region
   await LanguageAndRegion.config({ appName });
-  console.log('Done setting up language and region!');
+  console.log('✅ ✅ ✅  Done setting up language and region!');
 
   // Post setup and installation
   await PostInstallation.exec(appName, repoURL);
