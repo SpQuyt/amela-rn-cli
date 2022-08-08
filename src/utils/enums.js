@@ -4,6 +4,7 @@ const ArgvType = {
   ICON: 'ICON',
   SPLASH: 'SPLASH',
   FASTLANE: 'FASTLANE',
+  CODEPUSH: 'CODEPUSH',
 };
 
 module.exports = { ArgvType };

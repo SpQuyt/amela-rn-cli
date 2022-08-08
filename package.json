@@ -1,6 +1,6 @@
 {
   "name": "amela-rn-cli",
-  "version": "0.5.34",
+  "version": "0.5.44",
   "description": "AMELA react-native CLI",
   "main": "index.js",
   "scripts": {
@@ -12,6 +12,7 @@
     "dev": "NODE_ENV=development node index.js --init",
     "dev-version": "NODE_ENV=development node index.js --version",
     "dev-fastlane": "NODE_ENV=development node index.js --fastlane",
+    "dev-codepush": "NODE_ENV=development node index.js --codepush",
     "prod": "node index.js --init",
     "prod-fastlane": "node index.js --fastlane",
     "prod-version": "node index.js --version"
@@ -28,6 +29,7 @@
   },
   "homepage": "https://github.com/SpQuyt/amela-rn-cli#readme",
   "dependencies": {
+    "axios": "^0.27.2",
     "boxen": "^5.0.1",
     "chalk": "^4.1.1",
     "clear": "^0.1.0",

@@ -145,6 +145,27 @@ const checkLogoWidth = ({ valueString, defaultValue }) => {
   return resultValidate;
 };
 
+const checkCodepushAppName = ({ valueString }) => {
+  const resultValidate = commonCustomCheckFunction({
+    validateArr: [
+      CoreValidation.checkFilled({ valueString }),
+      CoreValidation.checkNoSpaces({ valueString }),
+      CoreValidation.checkNoSpecialSymbols({ valueString, excludeSymbolsArr: ['-'] }),
+    ],
+  });
+  return resultValidate;
+};
+
+const checkAppCenterApiKey = ({ valueString }) => {
+  const resultValidate = commonCustomCheckFunction({
+    validateArr: [
+      CoreValidation.checkFilled({ valueString }),
+      CoreValidation.checkNoSpaces({ valueString }),
+    ],
+  });
+  return resultValidate;
+};
+
 const CustomValidation = {
   checkTeamsUrl,
   checkCertFolderPath,
@@ -155,6 +176,8 @@ const CustomValidation = {
   checkImageFilePath,
   checkColorCode,
   checkLogoWidth,
+  checkCodepushAppName,
+  checkAppCenterApiKey,
 };
 
 module.exports = CustomValidation;

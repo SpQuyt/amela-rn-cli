@@ -15,22 +15,24 @@ const inquirer = require('inquirer');
 const sharp = require('sharp');
 const Keytool = require('keytool-utils/keytool');
 const Constants = require('utils/constants');
+const chalk = require('chalk');
+const Helpers = require('utils/helpers');
 
 const gitClonePromise = async (
   localPath = undefined,
   remoteURL = 'https://github.com/amela-technology/react-native-templet-v1.git',
 ) => {
-  const gitCloneStatus = new Spinner(`Cloning ${remoteURL}...`);
+  const gitCloneStatus = new Spinner(`⌛ Cloning ${remoteURL}...`);
   return new Promise((resolve, reject) => {
     gitCloneStatus.start();
     git.clone(remoteURL, localPath)
       .then(() => {
-        console.log('\nCloning successfully!');
+        console.log('\n✅ ✅ ✅ Cloning successfully!');
         resolve(null);
         gitCloneStatus.stop();
       })
       .catch((err) => {
-        console.log('Git clone err: ', err);
+        console.log('❗❗❗ Git clone err: ', err);
         reject(err);
         gitCloneStatus.stop();
       });
@@ -43,7 +45,7 @@ const promptGetListQuestionPromise = async (listQuestions) => new Promise((resol
   prompt.start();
   prompt.get(listQuestions, (err, result) => {
     if (err) {
-      console.log('Prompt questions list err: ', err);
+      console.log('❗❗❗ Prompt questions list err: ', err);
       reject(err);
     } else {
       resolve(result);
@@ -55,12 +57,16 @@ const execCommandLinePromise = async (
   execString,
   cmdMessage = 'Executing command line...',
 ) => {
-  const execCMDStatus = new Spinner(cmdMessage);
+  const execCMDStatus = new Spinner(`⌛ ${cmdMessage}`);
   execCMDStatus.start();
   return new Promise((resolve, reject) => {
     exec(execString, (err, stdout, stderr) => {
-      stdout && console.log('\nstdout: ', stdout);
-      stderr && console.log('stderr: ', stderr);
+      stdout && console.log('\n', `${chalk.green(stdout)}`);
+      if (stderr) {
+        const stdErrAfterWarning = Helpers.replaceWarning(stderr);
+        const stdErrAfterWarningError = Helpers.replaceError(stdErrAfterWarning);
+        console.log(stdErrAfterWarningError);
+      }
       if (err) {
         execCMDStatus.stop();
         reject(err);
@@ -75,7 +81,7 @@ const execCommandLinePromise = async (
 const replaceStringFilePromise = async (filePath, oldString, newString) => new Promise((resolve, reject) => {
   fs.readFile(filePath, (err, data) => {
     if (err) {
-      console.log('Replace name string err: ', err);
+      console.log('❗❗❗ Replace name string err: ', err);
       reject(err);
     } else {
       data = data.toString();
@@ -105,7 +111,7 @@ const createNewFilePromise = async (filePath, content) => new Promise((resolve, 
 const readFilePromise = async (filePath) => new Promise((resolve, reject) => {
   fs.readFile(filePath, (err, data) => {
     if (err) {
-      console.log('Replace name string err: ', err);
+      console.log('❗❗❗ Replace name string err: ', err);
       reject(err);
     } else {
       resolve(data.toString());
@@ -116,7 +122,7 @@ const readFilePromise = async (filePath) => new Promise((resolve, reject) => {
 const appendFilePromise = async (filePath, content) => new Promise((resolve, reject) => {
   fs.appendFile(filePath, content, (err) => {
     if (err) {
-      console.log('Append file err: ', err);
+      console.log('❗❗❗ Append file err: ', err);
       reject(err);
     } else {
       resolve(null);
@@ -211,7 +217,7 @@ const getKeyStoreInfoPromise = async (
   store.list(
     (err, res) => {
       if (err) {
-        console.log('Error listing keystore content', err);
+        console.log('❗❗❗ Error listing keystore content', err);
         reject(err);
       } else {
         console.log(`Keystore type: ${res.storetype} Provider: ${res.provider} (${res.certs.length} certificates)`);
@@ -247,7 +253,7 @@ const generateIconsPromise = async (
         })
         .catch((err) => {
           reject(err);
-          console.log('Generate icons error');
+          console.log('❗❗❗ Generate icons error');
         });
     });
   }
@@ -260,7 +266,7 @@ const generateIconsPromise = async (
       })
       .catch((err) => {
         reject(err);
-        console.log('Generate icons error');
+        console.log('❗❗❗ Generate icons error');
       });
   });
 };
