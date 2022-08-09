@@ -67,28 +67,27 @@ const deleteAppsCodepush = async ({ apiKey, savedAppcenterApiKeyPath }) => {
   }
 };
 
-const exec = async (appNameWithoutHyphen) => {
+const exec = async ({ appName }) => {
   // Check if the environment is DEV, then read from env.development file
-  let codepushAppName = appNameWithoutHyphen;
+  let codepushAppName = appName;
   if (process.env.IOS_APP_FOLDER_NAME) {
     codepushAppName = process.env.IOS_APP_FOLDER_NAME;
-  } else if (!appNameWithoutHyphen && !process.env.IOS_APP_FOLDER_NAME) {
+  } else if (!appName && !process.env.IOS_APP_FOLDER_NAME) {
     const codepushAppNameObjPromise = await Questions.askCodepushConfig();
     codepushAppName = codepushAppNameObjPromise.codepushAppName;
   }
 
   // rootProject path + app folder name (for iOS and Android)
-  let rootProject; let
-    appFolderName;
-  if (process.env.IOS_APP_FOLDER_NAME && appNameWithoutHyphen) {
-    rootProject = `./${appNameWithoutHyphen}`;
-    appFolderName = appNameWithoutHyphen;
-  } else if (process.env.IOS_APP_FOLDER_NAME && !appNameWithoutHyphen) {
+  let rootProject; let appIosAndroidFolderName;
+  if (appName) {
+    rootProject = `./${appName}`;
+    appIosAndroidFolderName = Helpers.getIosAppNameFolderFromRootFolder(rootProject);
+  } else if (process.env.IOS_APP_FOLDER_NAME && !appName) {
     rootProject = './TestProject';
-    appFolderName = 'testproject';
+    appIosAndroidFolderName = 'testproject';
   } else {
     rootProject = '.';
-    appFolderName = Helpers.getIosAppNameFolderFromRootFolder();
+    appIosAndroidFolderName = Helpers.getIosAppNameFolderFromRootFolder();
   }
 
   // Check if local client has saved ApiKey file
@@ -151,7 +150,7 @@ const exec = async (appNameWithoutHyphen) => {
   }
 
   // Config AppDelegate.mm
-  const appDelegatePath = `${rootProject}/ios/${appFolderName}/AppDelegate.mm`;
+  const appDelegatePath = `${rootProject}/ios/${appIosAndroidFolderName}/AppDelegate.mm`;
   const appDelegateContent = await CustomPromise.readFilePromise(appDelegatePath);
   if (!appDelegateContent.toString().includes('import <CodePush/CodePush.h>')) {
     console.log('⌛ Updating AppDelegate.mm...');
@@ -168,7 +167,7 @@ const exec = async (appNameWithoutHyphen) => {
   }
 
   // Config MainApplication.java
-  const mainApplicationPath = `${rootProject}/android/app/src/main/java/com/${appFolderName.toLowerCase()}/MainApplication.java`;
+  const mainApplicationPath = `${rootProject}/android/app/src/main/java/com/${appIosAndroidFolderName.toLowerCase()}/MainApplication.java`;
   const mainApplicationContent = await CustomPromise.readFilePromise(mainApplicationPath);
   if (!mainApplicationContent.toString().includes('import com.microsoft.codepush.react.CodePush;')) {
     console.log('⌛ Updating MainApplication.java...');

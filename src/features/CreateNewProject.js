@@ -83,7 +83,7 @@ const processExec = async ({
   console.log('✅ ✅ ✅  Done setting up language and region!');
 
   // Post setup and installation
-  await PostInstallation.exec(appName, repoURL);
+  await PostInstallation.exec(appName);
 };
 
 const exec = async () => {

@@ -9,9 +9,7 @@ const FastFileString = require('fastlane-utils/FastfileString');
 const Helpers = require('utils/helpers');
 require('dotenv').config({ path: `./.env.${process.env.NODE_ENV}` });
 
-const exec = async (appNameWithoutHyphen) => {
-  // Check if the environment is DEV, then read from env.development file
-  const ios_app_folder_name = process.env.IOS_APP_FOLDER_NAME || Helpers.getIosAppNameFolderFromRootFolder();
+const exec = async ({ appName }) => {
   const {
     teams_url, cert_output_folder,
     app_identifier_dev, app_identifier_stg,
@@ -26,9 +24,12 @@ const exec = async (appNameWithoutHyphen) => {
 
   // Get current project folder path
   // If already defined in param of function, use that param
-  const folderToExec = appNameWithoutHyphen || await Questions.askPathToExecuteCLI({
+  const folderToExec = appName || await Questions.askPathToExecuteCLI({
     question: 'Folder path to install fastlane files? (Example: ./ios/fastlane/)',
   });
+
+  // Check if the environment is DEV, then read from env.development file
+  const ios_app_folder_name = process.env.IOS_APP_FOLDER_NAME || Helpers.getIosAppNameFolderFromRootFolder(appName ? `./${appName}` : '.');
 
   // Delete and recreate folders
   await CustomPromise.execCommandLinePromise(

@@ -50,10 +50,12 @@ const convertAppNameToWithoutHyphen = ({ appName, isLowerCase = false }) => {
   return isLowerCase ? appNameWithoutHyphen.toLowerCase() : appNameWithoutHyphen;
 };
 
-const getIosAppNameFolderFromRootFolder = () => {
-  const defaultIosFolderPath = './ios/';
+const getIosAppNameFolderFromRootFolder = (rootProject) => {
+  const defaultIosFolderPath = `${rootProject || '.'}/ios/`;
+  console.log('defaultIosFolderPath', defaultIosFolderPath);
 
   const isIosFolderExisted = fs.existsSync(defaultIosFolderPath);
+  console.log('isIosFolderExisted', isIosFolderExisted);
   if (!isIosFolderExisted) return '';
 
   const getListDirNameInIosFolder = fs.readdirSync(defaultIosFolderPath, { withFileTypes: true })
@@ -84,7 +86,7 @@ const replaceWarning = (wholeString) => wholeString
   .replace(/\bWarning\b/g, chalk.bold.yellow('Warnings'));
 
 const replaceError = (wholeString) => wholeString
-  .replace(/\b\*\*ERROR\*\*\b/g, chalk.bold.red('**ERROR**'))
+  .replace(/\*\*ERROR\*\*/g, chalk.bold.red('**ERROR**'))
   .replace(/\berrors\b/g, chalk.bold.red('errors'))
   .replace(/\berror\b/g, chalk.bold.red('error'));
 

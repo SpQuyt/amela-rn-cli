@@ -28,9 +28,9 @@ const main = async () => {
     } else if (checkFlagResult === ArgvType.SPLASH) {
       await ChangeSplashScreen.exec({});
     } else if (checkFlagResult === ArgvType.FASTLANE) {
-      await SetupFastlane.exec();
+      await SetupFastlane.exec({});
     } else if (checkFlagResult === ArgvType.CODEPUSH) {
-      await SetupCodepush.exec();
+      await SetupCodepush.exec({});
     }
   } catch (err) {
     console.log('❗❗❗ err: ', err);
