@@ -153,11 +153,11 @@ const exec = async ({ appName }) => {
   const appDelegatePath = `${rootProject}/ios/${appIosAndroidFolderName}/AppDelegate.mm`;
   const appDelegateContent = await CustomPromise.readFilePromise(appDelegatePath);
   if (!appDelegateContent.toString().includes('import <CodePush/CodePush.h>')) {
-    console.log('⌛ Updating AppDelegate.mm...');
+    console.log('⌛ [iOS] Updating AppDelegate.mm...');
     await CustomPromise.replaceStringFilePromise(
       appDelegatePath,
       '#import <React/RCTRootView.h>',
-      '#import <React/RCTRootView.h>\nimport <CodePush/CodePush.h>',
+      '#import <React/RCTRootView.h>\n#import <CodePush/CodePush.h>',
     );
     await CustomPromise.replaceStringFilePromise(
       appDelegatePath,
@@ -170,7 +170,7 @@ const exec = async ({ appName }) => {
   const mainApplicationPath = `${rootProject}/android/app/src/main/java/com/${appIosAndroidFolderName.toLowerCase()}/MainApplication.java`;
   const mainApplicationContent = await CustomPromise.readFilePromise(mainApplicationPath);
   if (!mainApplicationContent.toString().includes('import com.microsoft.codepush.react.CodePush;')) {
-    console.log('⌛ Updating MainApplication.java...');
+    console.log('⌛ [Android] Updating MainApplication.java...');
     await CustomPromise.replaceStringFilePromise(
       mainApplicationPath,
       'import java.util.List;',
@@ -178,8 +178,25 @@ const exec = async ({ appName }) => {
     );
     await CustomPromise.replaceStringFilePromise(
       mainApplicationPath,
+      'return packages;',
+      'packages.add(new CodePush(getResources().getString(R.string.CodePushDeploymentKey), getApplicationContext(), BuildConfig.DEBUG));\n          return packages;',
+    );
+    await CustomPromise.replaceStringFilePromise(
+      mainApplicationPath,
       '@Override\n        protected String getJSMainModuleName() {\n          return "index";\n        }',
       '@Override\n        protected String getJSMainModuleName() {\n          return "index";\n        }\n        @Override\n        protected String getJSBundleFile() {\n            return CodePush.getJSBundleFile();\n        }',
+    );
+  }
+
+  // Config android/app/build.gradle
+  const appBuildGradlePath = `${rootProject}/android/app/build.gradle`;
+  const appBuildGradleContent = await CustomPromise.readFilePromise(appBuildGradlePath);
+  if (!appBuildGradleContent.toString().includes('implementation project(\':react-native-code-push\')')) {
+    console.log('⌛ [Android] Updating android/app/build.gradle...');
+    await CustomPromise.replaceStringFilePromise(
+      appBuildGradlePath,
+      'implementation "com.facebook.react:react-native:+"  // From node_modules',
+      'implementation "com.facebook.react:react-native:+"  // From node_modules\n    implementation project(\':react-native-code-push\')',
     );
   }
 

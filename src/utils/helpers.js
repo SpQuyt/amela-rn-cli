@@ -52,10 +52,8 @@ const convertAppNameToWithoutHyphen = ({ appName, isLowerCase = false }) => {
 
 const getIosAppNameFolderFromRootFolder = (rootProject) => {
   const defaultIosFolderPath = `${rootProject || '.'}/ios/`;
-  console.log('defaultIosFolderPath', defaultIosFolderPath);
 
   const isIosFolderExisted = fs.existsSync(defaultIosFolderPath);
-  console.log('isIosFolderExisted', isIosFolderExisted);
   if (!isIosFolderExisted) return '';
 
   const getListDirNameInIosFolder = fs.readdirSync(defaultIosFolderPath, { withFileTypes: true })

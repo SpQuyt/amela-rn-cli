@@ -28,16 +28,18 @@ const exec = async ({ appName }) => {
     question: 'Folder path to install fastlane files? (Example: ./ios/fastlane/)',
   });
 
+  const rootProject = appName ? `./${appName}` : '.';
   // Check if the environment is DEV, then read from env.development file
-  const ios_app_folder_name = process.env.IOS_APP_FOLDER_NAME || Helpers.getIosAppNameFolderFromRootFolder(appName ? `./${appName}` : '.');
+  const ios_app_folder_name = process.env.IOS_APP_FOLDER_NAME || Helpers.getIosAppNameFolderFromRootFolder(rootProject);
 
   // Delete and recreate folders
   await CustomPromise.execCommandLinePromise(
     `rm -rf ${folderToExec}/fastlane && rm -rf ${folderToExec}/Gemfile && mkdir ${folderToExec}/fastlane`,
-    'Making folder icon AppIcon.appiconset...',
+    'Delete and recreate Fastlane folders...',
   );
 
   // Creating fastlane files
+  console.log('⌛ Creating Fastlane files...');
   await CustomPromise.createNewFilePromise(
     `${folderToExec}/Gemfile`,
     GemFileString,
@@ -54,6 +56,16 @@ const exec = async ({ appName }) => {
       .replace(/app_identifier_dev = \"\"/g, `app_identifier_dev = \"${app_identifier_dev}\"`)
       .replace(/app_identifier_stg = \"\"/g, `app_identifier_stg = \"${app_identifier_stg}\"`),
   );
+
+  // Edit app bundle Id in .env files
+  console.log('⌛ Edit app Bundle Id in .env files...');
+  await CustomPromise.replaceStringFilePromise(`${rootProject}/.env`, /ANDROID_APP_ID=.*/, `ANDROID_APP_ID=${app_identifier_dev}`);
+  await CustomPromise.replaceStringFilePromise(`${rootProject}/.env`, /IOS_APP_ID=.*/, `IOS_APP_ID=${app_identifier_dev}`);
+  await CustomPromise.replaceStringFilePromise(`${rootProject}/.env.development`, /ANDROID_APP_ID=.*/, `ANDROID_APP_ID=${app_identifier_dev}`);
+  await CustomPromise.replaceStringFilePromise(`${rootProject}/.env.development`, /IOS_APP_ID=.*/, `IOS_APP_ID=${app_identifier_dev}`);
+  await CustomPromise.replaceStringFilePromise(`${rootProject}/.env.staging`, /ANDROID_APP_ID=.*/, `ANDROID_APP_ID=${app_identifier_stg}`);
+  await CustomPromise.replaceStringFilePromise(`${rootProject}/.env.staging`, /IOS_APP_ID=.*/, `IOS_APP_ID=${app_identifier_stg}`);
+
   console.log('✅ ✅ ✅  Done setting up Fastlane!');
 };
 
