@@ -47,7 +47,7 @@ const deleteAppsCodepush = async ({ apiKey, savedAppcenterApiKeyPath }) => {
       },
     });
     const listAppsRemote = listAppsRemoteAxios.data;
-    const filterListAppsRemote = listAppsRemote.filter((lARItem) => lARItem.name.includes('testproject'));
+    const filterListAppsRemote = listAppsRemote.filter((lARItem) => lARItem.name.includes('TestProject'));
     console.log(chalk.bold(`\t=>  List apps to delete is: [${filterListAppsRemote.map((fLARItem) => fLARItem.name).join(', ')}]`));
 
     // eslint-disable-next-line no-restricted-syntax
@@ -78,17 +78,7 @@ const exec = async ({ appName }) => {
   }
 
   // rootProject path + app folder name (for iOS and Android)
-  let rootProject; let appIosAndroidFolderName;
-  if (appName) {
-    rootProject = `./${appName}`;
-    appIosAndroidFolderName = Helpers.getIosAppNameFolderFromRootFolder(rootProject);
-  } else if (process.env.IOS_APP_FOLDER_NAME && !appName) {
-    rootProject = './TestProject';
-    appIosAndroidFolderName = 'testproject';
-  } else {
-    rootProject = '.';
-    appIosAndroidFolderName = Helpers.getIosAppNameFolderFromRootFolder();
-  }
+  const { rootProject, appIosAndroidFolderName } = Helpers.getRootProjectAndAppFolderPath({ appName });
 
   // Check if local client has saved ApiKey file
   let apiKey;

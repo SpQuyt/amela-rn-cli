@@ -9,6 +9,7 @@ const ChangeSplashScreen = require('features/ChangeSplashScreen');
 const SetupFastlane = require('features/SetupFastlane');
 const SetupCodepush = require('features/SetupCodepush');
 const { ArgvType } = require('utils/enums');
+const SetupOneSignal = require('features/SetupOneSignal');
 
 const main = async () => {
   try {
@@ -31,6 +32,8 @@ const main = async () => {
       await SetupFastlane.exec({});
     } else if (checkFlagResult === ArgvType.CODEPUSH) {
       await SetupCodepush.exec({});
+    } else if (checkFlagResult === ArgvType.ONESIGNAL) {
+      await SetupOneSignal.exec({});
     }
   } catch (err) {
     console.log('❗❗❗ err: ', err);

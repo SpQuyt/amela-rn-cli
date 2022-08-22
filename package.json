@@ -1,6 +1,6 @@
 {
   "name": "amela-rn-cli",
-  "version": "0.6.15",
+  "version": "0.7.0",
   "description": "AMELA react-native CLI",
   "main": "index.js",
   "scripts": {
@@ -13,6 +13,7 @@
     "dev-version": "NODE_ENV=development node index.js --version",
     "dev-fastlane": "NODE_ENV=development node index.js --fastlane",
     "dev-codepush": "NODE_ENV=development node index.js --codepush",
+    "dev-onesignal": "NODE_ENV=development node index.js --onesignal",
     "prod": "node index.js --init",
     "prod-fastlane": "node index.js --fastlane",
     "prod-version": "node index.js --version"

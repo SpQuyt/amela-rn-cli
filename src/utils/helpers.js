@@ -88,6 +88,24 @@ const replaceError = (wholeString) => wholeString
   .replace(/\berrors\b/g, chalk.bold.red('errors'))
   .replace(/\berror\b/g, chalk.bold.red('error'));
 
+const getRootProjectAndAppFolderPath = ({ appName }) => {
+  let rootProject; let appIosAndroidFolderName;
+  if (appName) {
+    rootProject = `./${appName}`;
+    appIosAndroidFolderName = getIosAppNameFolderFromRootFolder(rootProject);
+  } else if (process.env.IOS_APP_FOLDER_NAME && !appName) {
+    rootProject = './TestProject';
+    appIosAndroidFolderName = process.env.IOS_APP_FOLDER_NAME;
+  } else {
+    rootProject = '.';
+    appIosAndroidFolderName = getIosAppNameFolderFromRootFolder();
+  }
+  return {
+    rootProject,
+    appIosAndroidFolderName,
+  };
+};
+
 const Helpers = {
   checkUpdate,
   convertAppNameToWithoutHyphen,
@@ -96,6 +114,7 @@ const Helpers = {
   sleep,
   replaceWarning,
   replaceError,
+  getRootProjectAndAppFolderPath,
 };
 
 module.exports = Helpers;

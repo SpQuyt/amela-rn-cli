@@ -10,7 +10,9 @@ const KeyStorePassword = 'amela@123';
 
 const PackageJsonObj = require('../../package.json');
 
-const APIKey = '7921da1fa1babdfb8986a20ce623f2ed2850ecb1';
+const FastlaneOnesignalString = 'lane :get_push_cert do |options|\n  env = options[:env] || ENV_DEV\n  app_identifier = ""\n  if env == ENV_DEV\n    app_identifier = app_identifier_dev\n  elsif env == ENV_STG\n    app_identifier = app_identifier_stg\n  else\n  end\n\n  get_push_certificate(\n    force: false,\n    app_identifier: app_identifier,\n    save_private_key: true,\n    development: false,\n    username: username,\n    team_id: team_id,\n    output_path: cert_output_folder_filepath,\n    new_profile: proc do |profile_path|\n      puts profile_path\n    end\n  )\nend\n';
+
+const OneSignalEntitlementsString = '<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n<plist version="1.0">\n<dict>\n\t<key>aps-environment</key>\n\t<string>development</string>\n</dict>\n</plist>';
 
 const Constants = {
   IDEWorkspaceString,
@@ -21,7 +23,8 @@ const Constants = {
   XCConfigString,
   KeyStorePassword,
   PackageJsonObj,
-  APIKey,
+  FastlaneOnesignalString,
+  OneSignalEntitlementsString,
 };
 
 module.exports = Constants;

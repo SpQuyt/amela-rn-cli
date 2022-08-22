@@ -11,12 +11,10 @@ require('dotenv').config({ path: `./.env.${process.env.NODE_ENV}` });
 
 const exec = async ({ appName }) => {
   const {
-    teams_url, cert_output_folder,
-    app_identifier_dev, app_identifier_stg,
-  } = process.env.CERT_OUTPUT_FOLDER && process.env.TEAMS_URL && process.env.APP_IDENTIFIER_DEV && process.env.APP_IDENTIFIER_STG
+    teams_url, app_identifier_dev, app_identifier_stg,
+  } = process.env.TEAMS_URL && process.env.APP_IDENTIFIER_DEV && process.env.APP_IDENTIFIER_STG
     ? {
       teams_url: process.env.TEAMS_URL,
-      cert_output_folder: process.env.CERT_OUTPUT_FOLDER,
       app_identifier_dev: process.env.APP_IDENTIFIER_DEV,
       app_identifier_stg: process.env.APP_IDENTIFIER_STG,
     }
@@ -51,7 +49,7 @@ const exec = async ({ appName }) => {
   await CustomPromise.createNewFilePromise(
     `${folderToExec}/fastlane/Fastfile`,
     FastFileString.replace(/teams_url = \"\"/g, `teams_url = \"${teams_url}\"`)
-      .replace(/cert_output_folder = \"\"/g, `cert_output_folder = \"${cert_output_folder}\"`)
+      .replace(/cert_output_folder = \"\"/g, `cert_output_folder = \"~/Downloads/${ios_app_folder_name}_cert\"`)
       .replace(/ios_app_folder_name = \"\"/g, `ios_app_folder_name = \"${ios_app_folder_name}\"`)
       .replace(/app_identifier_dev = \"\"/g, `app_identifier_dev = \"${app_identifier_dev}\"`)
       .replace(/app_identifier_stg = \"\"/g, `app_identifier_stg = \"${app_identifier_stg}\"`),
