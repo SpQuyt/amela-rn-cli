@@ -3,6 +3,7 @@ const ChangeAppIcon = require('features/ChangeAppIcon');
 const SetupFastlane = require('features/SetupFastlane');
 const Texts = require('utils/texts');
 const SetupCodepush = require('features/SetupCodepush');
+const SetupOneSignal = require('features/SetupOneSignal');
 const Questions = require('./Questions');
 
 const exec = async (appName) => {
@@ -15,6 +16,7 @@ const exec = async (appName) => {
   if (process.env.PROJECT_NAME) {
     await SetupCodepush.exec({ appName });
     await SetupFastlane.exec({ appName });
+    await SetupOneSignal.exec({ appName });
     return;
   }
 
@@ -28,6 +30,12 @@ const exec = async (appName) => {
   const fastlaneAnswer = await Questions.askQuestionYesNo({ question: 'Do you want to setup Fastlane?' });
   if (fastlaneAnswer === Texts.yes) {
     await SetupFastlane.exec({ appName });
+  }
+
+  // Ask user if they want to set up OneSignal
+  const oneSignalAnswer = await Questions.askQuestionYesNo({ question: 'Do you want to setup OneSignal?' });
+  if (oneSignalAnswer === Texts.yes) {
+    await SetupOneSignal.exec({ appName });
   }
 };
 

@@ -121,10 +121,6 @@ const askFastlaneConfig = async () => {
     question: 'Microsoft teams Webhook URL: (Example: https://webhook.com): ',
     onValidate: (valueString) => CustomValidation.checkTeamsUrl({ valueString }),
   });
-  const cert_output_folder = await askQuestion1Answer({
-    question: 'Folder in Download folder to save certificates (No spaces, no special symbols except "_"). Example: Test_Project_Cert: ',
-    onValidate: (valueString) => CustomValidation.checkCertFolderPath({ valueString, excludeSymbolsArr: ['_'] }),
-  });
   const app_identifier_dev = await askQuestion1Answer({
     question: 'iOS Bundle ID for DEV environment (Starts with com.amela. No spaces, no special symbols except dots ".") Example: com.amela.test.dev: ',
     onValidate: (valueString) => CustomValidation.checkBundleIdentifier({ valueString }),
@@ -135,7 +131,6 @@ const askFastlaneConfig = async () => {
   });
   return {
     teams_url,
-    cert_output_folder: `~/Downloads/${cert_output_folder}`,
     app_identifier_dev,
     app_identifier_stg,
   };
@@ -181,6 +176,41 @@ const askAppCenterApiKey = async () => {
   };
 };
 
+const askOneSignalUserAuthKey = async () => {
+  const userAuthKey = await askQuestion1Answer({
+    question: `Please copy and paste User Auth Key for OneSignal App.\nIf you don't have any, create one on ${chalk.bold.blue('https://app.onesignal.com/profile')}: `,
+    onValidate: (valueString) => CoreValidation.checkFilled({ valueString }),
+  });
+  return {
+    userAuthKey,
+  };
+};
+
+const askFirebaseAndroidKeys = async () => {
+  const androidTokenDev = process.env.SERVER_KEY_TOKEN_DEV || await askQuestion1Answer({
+    question: `Please copy and paste ${chalk.bold('DEVELOPMENT')} ${chalk.bold.yellow('Server Key Token')} of Cloud Message API on Firebase application.\nIf you don't have Firebase application, create one on ${chalk.bold.blue('https://console.firebase.google.com')}: `,
+    onValidate: (valueString) => CoreValidation.checkFilled({ valueString }),
+  });
+  const androidSenderIdDev = process.env.SENDER_ID_DEV || await askQuestion1Answer({
+    question: `Please copy and paste ${chalk.bold('DEVELOPMENT')} ${chalk.bold.yellow('Sender Id')} of Cloud Message API on Firebase application.\nIf you don't have Firebase application, create one on ${chalk.bold.blue('https://console.firebase.google.com')}: `,
+    onValidate: (valueString) => CoreValidation.checkFilled({ valueString }),
+  });
+  const androidTokenStg = process.env.SERVER_KEY_TOKEN_STG || await askQuestion1Answer({
+    question: `Please copy and paste ${chalk.bold('STAGING')} ${chalk.bold.yellow('Server Key Token')} of Cloud Message API on Firebase application.\nIf you don't have Firebase application, create one on ${chalk.bold.blue('https://console.firebase.google.com')}: `,
+    onValidate: (valueString) => CoreValidation.checkFilled({ valueString }),
+  });
+  const androidSenderIdStg = process.env.SENDER_ID_STG || await askQuestion1Answer({
+    question: `Please copy and paste ${chalk.bold('STAGING')} ${chalk.bold.yellow('Sender Id')} of Cloud Message API on Firebase application.\nIf you don't have Firebase application, create one on ${chalk.bold.blue('https://console.firebase.google.com')}: `,
+    onValidate: (valueString) => CoreValidation.checkFilled({ valueString }),
+  });
+  return {
+    androidTokenDev,
+    androidSenderIdDev,
+    androidTokenStg,
+    androidSenderIdStg,
+  };
+};
+
 const Questions = {
   askQuestion1Answer,
   askQuestionYesNo,
@@ -196,6 +226,8 @@ const Questions = {
   askSplashConfig,
   askCodepushConfig,
   askAppCenterApiKey,
+  askOneSignalUserAuthKey,
+  askFirebaseAndroidKeys,
 };
 
 module.exports = Questions;

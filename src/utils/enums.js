@@ -5,6 +5,7 @@ const ArgvType = {
   SPLASH: 'SPLASH',
   FASTLANE: 'FASTLANE',
   CODEPUSH: 'CODEPUSH',
+  ONESIGNAL: 'ONESIGNAL',
 };
 
 module.exports = { ArgvType };
