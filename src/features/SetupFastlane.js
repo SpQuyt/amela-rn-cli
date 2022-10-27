@@ -7,6 +7,7 @@ const GemFileString = require('fastlane-utils/GemfileString');
 const PluginFileString = require('fastlane-utils/PluginfileString');
 const FastFileString = require('fastlane-utils/FastfileString');
 const Helpers = require('utils/helpers');
+const GoogleServiceString = require('fastlane-utils/GoogleServiceString');
 require('dotenv').config({ path: `./.env.${process.env.NODE_ENV}` });
 
 const exec = async ({ appName }) => {
@@ -53,6 +54,10 @@ const exec = async ({ appName }) => {
       .replace(/ios_app_folder_name = \"\"/g, `ios_app_folder_name = \"${ios_app_folder_name}\"`)
       .replace(/app_identifier_dev = \"\"/g, `app_identifier_dev = \"${app_identifier_dev}\"`)
       .replace(/app_identifier_stg = \"\"/g, `app_identifier_stg = \"${app_identifier_stg}\"`),
+  );
+  await CustomPromise.createNewFilePromise(
+    `${folderToExec}/fastlane/autobuildamela.json`,
+    GoogleServiceString,
   );
 
   // Edit app bundle Id in .env files

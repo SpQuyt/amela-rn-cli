@@ -21,9 +21,54 @@ install_on_air_token = "xWRyMuMoyDbg8YPZrXpS4vXOZuz86KdeMCEQ2Xm3"
 ENV_DEV = "development"
 ENV_STG = "staging"
 ENV_PROD = "production"
+IOS = "ios"
+ANDROID = "android"
+LIMIT_FILE_SIZE_BYTES = 190000000
+B_TO_MB_CONVERSION_AMOUNT = 1048576
+G_DRIVE_FOLDER_ID = '1srwMGJa2kI0g_wZGSRPni3FRZQrHT-hw'
+G_DRIVE_KEY_FILE = 'fastlane/autobuildamela.json'
 username = "info@amela.vn"
 team_id = "A934T35MUC"
-
+file_android_large_warning = ""
+file_ios_large_warning = ""
+# ======================================================================================
+# =================================Helper functions=====================================
+# ======================================================================================
+lane :handle_upload_google_drive do |options|
+  upload_to_google_drive(  
+    drive_keyfile: G_DRIVE_KEY_FILE,
+    service_account: false,
+    folder_id: G_DRIVE_FOLDER_ID,
+    upload_files: [options[:file_path]]
+  )
+  if options[:platform] == IOS
+    link_upload_ios = lane_context[SharedValues::GDRIVE_UPLOADED_FILE_URLS][0]
+  else
+    link_upload_android = lane_context[SharedValues::GDRIVE_UPLOADED_FILE_URLS][0]
+  end
+end
+lane :handle_upload_install_on_air do |options|
+  installonair(
+    token: install_on_air_token,
+    file:  options[:file_path],
+  )
+  if options[:platform] == IOS
+    link_upload_ios = lane_context[SharedValues::UPLOADED_FILE_LINK_TO_INSTALL_ON_AIR]
+  else
+    link_upload_android = lane_context[SharedValues::UPLOADED_FILE_LINK_TO_INSTALL_ON_AIR]
+  end
+end
+lane :handle_upload_diawi do |options|
+  diawi(
+    token: diawi_token,
+    file:  options[:file_path],
+  )
+  if options[:platform] == IOS
+    link_upload_ios = lane_context[SharedValues::UPLOADED_FILE_LINK_TO_DIAWI]
+  else
+    link_upload_android = lane_context[SharedValues::UPLOADED_FILE_LINK_TO_DIAWI]
+  end
+end
 # ======================================================================================
 # =================================Android==============================================
 # ======================================================================================
@@ -49,29 +94,19 @@ lane :build_android do |options|
   else
   end
 end
-
-lane :upload_diawi_android do |options|
+lane :upload_android do |options|
   env = options[:env] || ENV_DEV
   file_path = lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
-  diawi(
-      token: diawi_token,
-      file:  file_path,
-    )
-  link_upload_android = lane_context[SharedValues::UPLOADED_FILE_LINK_TO_DIAWI]
+  file_size = File.size(file_path)
+  if file_size > LIMIT_FILE_SIZE_BYTES
+    handle_upload_google_drive(file_path: file_path, platform: ANDROID)
+    file_android_large_warning = "File Android is too large (#{file_size / B_TO_MB_CONVERSION_AMOUNT}MB)"
+  else
+    # handle_upload_diawi(file_path: file_path, platform: ANDROID)
+    handle_upload_install_on_air(file_path: file_path, platform: ANDROID)
+  end
   puts "\n#####################\n"
 end
-
-lane :upload_install_on_air_android do |options|
-  env = options[:env] || ENV_DEV
-  file_path = lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
-  installonair(
-      token: diawi_token,
-      file:  file_path,
-    )
-  link_upload_android = lane_context[SharedValues::UPLOADED_FILE_LINK_TO_INSTALL_ON_AIR]
-  puts "\n#####################\n"
-end
-
 lane :notify_ms_team_android do |options|
   env = options[:env] || ENV_DEV
   env_var = ""
@@ -96,6 +131,10 @@ lane :notify_ms_team_android do |options|
         )
       },
       {
+        "name"=>"Warning Android",
+        "value"=>file_android_large_warning
+      },
+      {
         "name"=>"Android",
         "value"=>link_upload_android
       }
@@ -103,7 +142,6 @@ lane :notify_ms_team_android do |options|
   teams_url: teams_url
     )
 end
-
 # ======================================================================================
 # ======================================iOS=============================================
 # ======================================================================================
@@ -123,7 +161,6 @@ lane :build_ios do |options|
     app_scheme = "#{ios_app_folder_name} STG"
   else
   end
-
   get_provisioning_profile(
     development: true,
     force: true,
@@ -133,7 +170,6 @@ lane :build_ios do |options|
     filename: filename_mobileprovision,
     output_path: cert_output_folder_filepath
   )
-
   update_code_signing_settings(
     profile_name: "#{app_identifier} Development",
     path: xcodeprojPath,
@@ -142,7 +178,6 @@ lane :build_ios do |options|
     code_sign_identity: "Apple Development",
     use_automatic_signing: false,
   )
-
   build_app(scheme: app_scheme,
           workspace: xcworkspacePath,
           export_method: "development",
@@ -155,33 +190,20 @@ lane :build_ios do |options|
           clean: false,
           output_directory: output_directory)
 end
-
-lane :upload_diawi_ios do |options|
+lane :upload_ios do |options|
   env = options[:env] || ENV_DEV
   output_directory = "./ios/ipa_builds_#{env}"
   file_path = "#{output_directory}/#{ios_app_folder_name}.ipa"
-  
-  diawi(
-    token: diawi_token,
-    file:  file_path,
-  )
-  link_upload_ios = lane_context[SharedValues::UPLOADED_FILE_LINK_TO_DIAWI]
+  file_size = File.size(File.join(File.dirname(File.dirname(File.absolute_path(__FILE__))), file_path))
+  if file_size > LIMIT_FILE_SIZE_BYTES
+    file_ios_large_warning = "File iOS is too large (#{file_size / B_TO_MB_CONVERSION_AMOUNT}MB)"
+    handle_upload_google_drive(file_path: file_path, platform: IOS)
+  else
+    # handle_upload_diawi(file_path: file_path, platform: IOS)
+    handle_upload_install_on_air(file_path: file_path, platform: IOS)
+  end
   puts "\n#####################\n"
 end
-
-lane :upload_install_on_air_ios do |options|
-  env = options[:env] || ENV_DEV
-  output_directory = "./ios/ipa_builds_#{env}"
-  file_path = "#{output_directory}/#{ios_app_folder_name}.ipa"
-  
-  installonair(
-    token: install_on_air_token,
-    file:  file_path,
-  )
-  link_upload_ios = lane_context[SharedValues::UPLOADED_FILE_LINK_TO_INSTALL_ON_AIR]
-  puts "\n#####################\n"
-end
-
 lane :notify_ms_team_ios do |options|
   env = options[:env] || ENV_DEV
   env_var = ""
@@ -206,6 +228,10 @@ lane :notify_ms_team_ios do |options|
         )
       },
       {
+        "name"=>"Warning iOS",
+        "value"=>file_ios_large_warning
+      },
+      {
         "name"=>"iOS",
         "value"=>link_upload_ios
       },
@@ -213,7 +239,6 @@ lane :notify_ms_team_ios do |options|
   teams_url: teams_url
   )
 end
-
 # ======================================================================================
 # =================================Android + iOS========================================
 # ======================================================================================
@@ -222,15 +247,11 @@ lane :build do |options|
   build_ios env:options[:env]
   build_android env:options[:env]
 end
-
 lane :upload do |options|
   env = options[:env] || ENV_DEV
-  # upload_diawi_ios env:options[:env]
-  # upload_diawi_android env:options[:env]
-  upload_install_on_air_ios env:options[:env]
-  upload_install_on_air_android env:options[:env]
+  upload_ios env:options[:env]
+  upload_android env:options[:env]
 end
-
 lane :notify_ms_team do |options|
   env = options[:env] || ENV_DEV
   env_var = ""
@@ -255,41 +276,43 @@ lane :notify_ms_team do |options|
         )
       },
       {
+        "name"=>"Warning iOS",
+        "value"=>file_ios_large_warning
+      },
+      {
         "name"=>"iOS",
         "value"=>link_upload_ios
       },
       {
+        "name"=>"Warning Android",
+        "value"=>file_android_large_warning
+      },
+      {
         "name"=>"Android",
         "value"=>link_upload_android
-      }
+      },
   ],
     teams_url: teams_url
   )
 end
-
 # ======================================================================================
 # =====================================Execution========================================
 # ======================================================================================
 lane :release_ios do |options|
   build_ios env:options[:env]
-  # upload_diawi_ios env:options[:env]
-  upload_install_on_air_ios env:options[:env]
+  upload_ios env:options[:env]
   notify_ms_team_ios env:options[:env]
 end
-
 lane :release_android do |options|
   build_android env:options[:env]
-  # upload_diawi_android env:options[:env]
-  upload_install_on_air_android env:options[:env]
+  upload_android env:options[:env]
   notify_ms_team_android env:options[:env]
 end
-
 lane :release do |options|
   build env:options[:env]
   upload env:options[:env]
   notify_ms_team env:options[:env]
 end
-
 error do |lane, exception|
   teams(
     title: "⛔️ Failed to build",
