@@ -35,16 +35,25 @@ file_ios_large_warning = ""
 # =================================Helper functions=====================================
 # ======================================================================================
 lane :handle_upload_google_drive do |options|
-  upload_to_google_drive(  
-    drive_keyfile: G_DRIVE_KEY_FILE,
-    service_account: false,
-    folder_id: G_DRIVE_FOLDER_ID,
-    upload_files: [options[:file_path]]
-  )
-  if options[:platform] == IOS
-    link_upload_ios = lane_context[SharedValues::GDRIVE_UPLOADED_FILE_URLS][0]
-  else
-    link_upload_android = lane_context[SharedValues::GDRIVE_UPLOADED_FILE_URLS][0]
+  if options[:file_path]
+    keyword = options[:file_path].split("/")[-1]
+    if options[:platform] == IOS
+      keyword = keyword.split(".ipa")[0]
+    else
+      keyword = keyword.split("-")[0]
+    end
+    upload_to_google_drive(
+      drive_keyfile: G_DRIVE_KEY_FILE,
+      service_account: false,
+      folder_id: G_DRIVE_FOLDER_ID,
+      upload_files: [options[:file_path]],
+      delete_alias_keyword: keyword
+    )
+    if options[:platform] == IOS
+      link_upload_ios = lane_context[SharedValues::GDRIVE_UPLOADED_FILE_URLS][0]
+    else
+      link_upload_android = lane_context[SharedValues::GDRIVE_UPLOADED_FILE_URLS][0]
+    end
   end
 end
 lane :handle_upload_install_on_air do |options|
