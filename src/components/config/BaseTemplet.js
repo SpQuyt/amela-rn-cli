@@ -32,6 +32,11 @@ const configAndInstall = async ({ appName, appDisplayName }) => {
     'ios',
     '',
   );
+  await CustomPromise.replaceStringFilePromise(
+    `${newPath}/.gitignore`,
+    '//Pods/',
+    '/ios/Pods/',
+  );
   // Handle script postinstall
   await CustomPromise.replaceStringFilePromise(
     `${newPath}/package.json`,

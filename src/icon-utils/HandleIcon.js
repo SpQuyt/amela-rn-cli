@@ -130,7 +130,7 @@ const installIconsAndroid = async ({ appName }) => {
     const cmdCopyImg = `cp ./${sourcePath}/${folderItem}/ic_launcher.png ./${destinationPath}/${folderItem}/`;
     const cmdCopyImgRound = `cp ./${sourcePath}/${folderItem}/ic_launcher_round.png ./${destinationPath}/${folderItem}/`;
     await CustomPromise.execCommandLinePromise(
-      `rm -rf ./${destinationPath}/${folderItem}/* && ${cmdCopyImg} && ${cmdCopyImgRound}`,
+      `rm -rf ./${destinationPath}/${folderItem}/ic_launcher.png && rm -rf ./${destinationPath}/${folderItem}/ic_launcher_round.png && ${cmdCopyImg} && ${cmdCopyImgRound}`,
       `Installing icon android ${folderItem}`,
     );
   }

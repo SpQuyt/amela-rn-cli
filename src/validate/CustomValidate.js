@@ -100,8 +100,6 @@ const checkImageFilePath = ({ valueString }) => {
     validateArr: [
       CoreValidation.checkFilled({ valueString }),
       CoreValidation.checkNoSpaces({ valueString }),
-      CoreValidation.checkRegexRelativeFilePath({ valueString }),
-      CoreValidation.checkNoSpecialSymbols({ valueString, excludeSymbolsArr: ['_', '.', '/'] }),
     ],
   });
   return resultValidate;

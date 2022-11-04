@@ -39,6 +39,8 @@ const exec = async () => {
       'android:theme="@style/AppTheme"',
       'android:theme="@style/BootTheme"',
     );
+  }
+  if (!androidManifestReadFile.includes('android:exported="true"')) {
     await CustomPromise.replaceStringFilePromise(
       './android/app/src/main/AndroidManifest.xml',
       'android:windowSoftInputMode="adjustResize"',
@@ -50,14 +52,23 @@ const exec = async () => {
   if (!androidMainActivityReadFile.includes('RNBootSplash')) {
     await CustomPromise.replaceStringFilePromise(
       `./android/app/src/main/java/com/${currentAppName}/MainActivity.java`,
-      'import com.facebook.react.ReactActivityDelegate;',
-      'import com.facebook.react.ReactActivityDelegate;\nimport com.zoontek.rnbootsplash.RNBootSplash;\n',
+      'import com.facebook.react.ReactActivity;',
+      'import com.facebook.react.ReactActivity;\nimport com.zoontek.rnbootsplash.RNBootSplash;\n',
     );
-    await CustomPromise.replaceStringFilePromise(
-      `./android/app/src/main/java/com/${currentAppName}/MainActivity.java`,
-      'public class MainActivity extends ReactActivity {',
-      'public class MainActivity extends ReactActivity {\n  @Override\n  protected ReactActivityDelegate createReactActivityDelegate() {\n    return new ReactActivityDelegate(this, getMainComponentName()) {\n\n      @Override\n      protected void loadApp(String appKey) {\n        RNBootSplash.init(MainActivity.this); // <- initialize the splash screen\n        super.loadApp(appKey);\n      }\n    };\n  }',
-    );
+    // For older version
+    if (!androidMainActivityReadFile.includes('createReactActivityDelegate')) {
+      await CustomPromise.replaceStringFilePromise(
+        `./android/app/src/main/java/com/${currentAppName}/MainActivity.java`,
+        'public class MainActivity extends ReactActivity {',
+        'public class MainActivity extends ReactActivity {\n  @Override\n  protected ReactActivityDelegate createReactActivityDelegate() {\n    return new ReactActivityDelegate(this, getMainComponentName()) {\n\n      @Override\n      protected void loadApp(String appKey) {\n        RNBootSplash.init(MainActivity.this); // <- initialize the splash screen\n        super.loadApp(appKey);\n      }\n    };\n  }',
+      );
+    } else {
+      await CustomPromise.replaceStringFilePromise(
+        `./android/app/src/main/java/com/${currentAppName}/MainActivity.java`,
+        'return new MainActivityDelegate(this, getMainComponentName());',
+        'return new MainActivityDelegate(this, getMainComponentName()) {\n      @Override\n      protected void loadApp(String appKey) {\n        RNBootSplash.init(MainActivity.this); // <- initialize the splash screen\n        super.loadApp(appKey);\n      }\n    };',
+      );
+    }
   }
 
   // styles.xml
@@ -80,16 +91,31 @@ const exec = async () => {
   // AppDelegate
   const iosAppDelegateReadFile = await CustomPromise.readFilePromise(`./ios/${currentAppName}/AppDelegate.mm`);
   if (!iosAppDelegateReadFile.includes('RNBootSplash')) {
-    await CustomPromise.replaceStringFilePromise(
-      `./ios/${currentAppName}/AppDelegate.mm`,
-      '#import <React/RCTRootView.h>',
-      '#import <React/RCTRootView.h>\n#import "RNBootSplash.h"',
-    );
-    await CustomPromise.replaceStringFilePromise(
-      `./ios/${currentAppName}/AppDelegate.mm`,
-      '[self.window makeKeyAndVisible];',
-      '[self.window makeKeyAndVisible];\n[RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView];',
-    );
+    if (fs.existsSync(`./ios/${currentAppName}/AppDelegate.mm`)) {
+      await CustomPromise.replaceStringFilePromise(
+        `./ios/${currentAppName}/AppDelegate.mm`,
+        '#import <React/RCTRootView.h>',
+        '#import <React/RCTRootView.h>\n#import "RNBootSplash.h"',
+      );
+      await CustomPromise.replaceStringFilePromise(
+        `./ios/${currentAppName}/AppDelegate.mm`,
+        '[self.window makeKeyAndVisible];',
+        '[self.window makeKeyAndVisible];\n[RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView];',
+      );
+    }
+    // For older version
+    if (fs.existsSync(`./ios/${currentAppName}/AppDelegate.m`)) {
+      await CustomPromise.replaceStringFilePromise(
+        `./ios/${currentAppName}/AppDelegate.m`,
+        '#import <React/RCTRootView.h>',
+        '#import <React/RCTRootView.h>\n#import "RNBootSplash.h"',
+      );
+      await CustomPromise.replaceStringFilePromise(
+        `./ios/${currentAppName}/AppDelegate.m`,
+        '[self.window makeKeyAndVisible];',
+        '[self.window makeKeyAndVisible];\n[RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView];',
+      );
+    }
   }
   // Info.plist
   await CustomPromise.replaceStringFilePromise(
@@ -104,7 +130,7 @@ const exec = async () => {
     'Installing bootsplash...',
   );
   await CustomPromise.execCommandLinePromise(
-    `yarn react-native generate-bootsplash ${inputFilePath}  --background-color=${backgroundColor} --logo-width ${logoWidth}`,
+    `yarn react-native generate-bootsplash ${inputFilePath} --background-color=${backgroundColor} --logo-width ${logoWidth}`,
     'Generating bootsplash...',
   );
 
@@ -138,7 +164,7 @@ const exec = async () => {
   await CustomPromise.replaceStringFilePromise(
     `${pbxProjectPath}`,
     `/* BootSplash.storyboard */ = {isa = PBXFileReference; name = "BootSplash.storyboard"; path = "./ios/${currentAppName}/BootSplash.storyboard"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };`,
-    '/* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = chudaibi/BootSplash.storyboard; sourceTree = "<group>"; };',
+    `/* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = ${currentAppName}/BootSplash.storyboard; sourceTree = "<group>"; };`,
   );
   await CustomPromise.replaceStringFilePromise(
     `${pbxProjectPath}`,

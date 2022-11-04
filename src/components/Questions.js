@@ -137,17 +137,18 @@ const askFastlaneConfig = async () => {
 };
 
 const askSplashConfig = async () => {
-  const inputFilePath = await askQuestion1Answer({
-    question: 'Image path for splash screen - JPEG, PNG (No spaces, no special symbols except "_", ".", "/") - Example: ./assets/image/splash.jpeg: ',
+  const inputFilePathBeforeProcessed = await askQuestion1Answer({
+    question: 'Image path for splash screen - JPEG, PNG (You can drag your image to here) - Example: ./assets/image/splash.jpeg: ',
     onValidate: (valueString) => CustomValidation.checkImageFilePath({ valueString }),
   });
+  const inputFilePath = inputFilePathBeforeProcessed.replace(/'/g, '');
   const backgroundColor = await askQuestion1Answer({
-    question: 'Background color for splash screen, (Must be hex-code 6 characters. By default, the color is FFFFFF) - Example: FFFFFF: ',
-    onValidate: (valueString) => CustomValidation.checkColorCode({ valueString, defaultValue: 'FFFFFF' }),
+    question: 'Background color for splash screen, (Must be hex-code 6 characters, WITHOUT #) - Example: FFFFFF: ',
+    onValidate: (valueString) => CustomValidation.checkColorCode({ valueString }),
   });
   const logoWidth = await askQuestion1Answer({
-    question: 'Logo width (Must be a number from 100 to 288. By default the number is 100) - Example: 125: ',
-    onValidate: (valueString) => CustomValidation.checkLogoWidth({ valueString, defaultValue: '100' }),
+    question: 'Logo width (Must be a number from 100 to 288, recommend for Android is 192) - Example: 192: ',
+    onValidate: (valueString) => CustomValidation.checkLogoWidth({ valueString }),
   });
   return {
     inputFilePath,

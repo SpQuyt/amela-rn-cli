@@ -1,6 +1,6 @@
 {
   "name": "amela-rn-cli",
-  "version": "0.7.3",
+  "version": "0.7.6",
   "description": "AMELA react-native CLI",
   "main": "index.js",
   "scripts": {
