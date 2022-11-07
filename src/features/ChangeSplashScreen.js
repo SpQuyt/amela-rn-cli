@@ -10,7 +10,9 @@ const exec = async () => {
   // Get folder app name
   const currentAppName = Helpers.getIosAppNameFolderFromRootFolder();
 
-  /** Android */
+  /** ************************************************************************************************************ */
+  /** ***************************************************** Android ********************************************** */
+  /** ************************************************************************************************************ */
   // build.gradle
   await CustomPromise.replaceStringFilePromise(
     './android/build.gradle',
@@ -81,7 +83,9 @@ const exec = async () => {
     );
   }
 
-  /** iOS */
+  /** ************************************************************************************************************ */
+  /** ***************************************************** iOS ************************************************** */
+  /** ************************************************************************************************************ */
   // Podfile
   await CustomPromise.replaceStringFilePromise(
     './ios/Podfile',
@@ -124,7 +128,10 @@ const exec = async () => {
     '<string>BootSplash</string>',
   );
 
-  /** npm install */
+  /** ************************************************************************************************************ */
+  /** ***************************************************** Integrate library ************************************ */
+  /** ************************************************************************************************************ */
+  // npm install
   await CustomPromise.execCommandLinePromise(
     'yarn add react-native-bootsplash',
     'Installing bootsplash...',
@@ -133,8 +140,7 @@ const exec = async () => {
     `yarn react-native generate-bootsplash ${inputFilePath} --background-color=${backgroundColor} --logo-width ${logoWidth}`,
     'Generating bootsplash...',
   );
-
-  /** Add code line to .tsx files */
+  // Add code line to .tsx files
   const rootSceneReadFile = await CustomPromise.readFilePromise('./src/navigation/scene/RootScenes.tsx');
   if (!rootSceneReadFile.includes('RNBootSplash')) {
     await CustomPromise.replaceStringFilePromise(
@@ -144,11 +150,28 @@ const exec = async () => {
     );
   }
 
-  /** Link project.pbxproj */
+  /** ************************************************************************************************************ */
+  /** ***************************************************** Link project.pbxproj ********************************* */
+  /** ************************************************************************************************************ */
   // Get all information fields
   const pbxProjectPath = `./ios/${currentAppName}.xcodeproj/project.pbxproj`;
   const bootSplashStoryBoardPath = `./ios/${currentAppName}/BootSplash.storyboard`;
   const myProj = xcode(pbxProjectPath);
+  // Unlink all previous lines of pbxprj
+  const contentPbxPrjForUnlink = await CustomPromise.readFilePromise(`${pbxProjectPath}`);
+  const contentPbxPrjForUnlinkStringify = JSON.stringify(contentPbxPrjForUnlink);
+  const contentUnlinkAfterProcess = contentPbxPrjForUnlinkStringify
+    .replace(/\\n\\t\\t.{24} \/\* BootSplash\.storyboard in Resources \*\/ = {isa = PBXBuildFile; fileRef = .{24} \/\* BootSplash\.storyboard \*\/; };/g, '')
+    .replace(/\\t\\t.{24} \/\* BootSplash\.storyboard \*\/ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file\.storyboard; name = BootSplash\.storyboard; path = eightapp\/BootSplash\.storyboard; sourceTree = \\"<group>\\"; };/g, '')
+    .replace(/\\n\\t\\t\\t\\t.{24} \/\* BootSplash\.storyboard in Resources \*\/,/g, '')
+    .replace(/\\n\\t\\t\\t\\t.{24} \/\* BootSplash\.storyboard \*\/,/g, '');
+
+  await CustomPromise.replaceStringFilePromise(
+    `${pbxProjectPath}`,
+    contentPbxPrjForUnlink,
+    JSON.parse(contentUnlinkAfterProcess),
+  );
+
   await CustomPromise.parseXCodeProjectPromise(myProj);
   const resourceFile = await myProj.addResourceFile(
     bootSplashStoryBoardPath,
@@ -176,11 +199,22 @@ const exec = async () => {
     '13B07F8E1A680F5B00A75B9A /* Resources */ = {\n\t\t\tisa = PBXResourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t\t81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,',
     `13B07F8E1A680F5B00A75B9A /* Resources */ = {\n\t\t\tisa = PBXResourcesBuildPhase;\n\t\t\tbuildActionMask = 2147483647;\n\t\t\tfiles = (\n\t\t\t\t81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,\n\t\t\t\t${uuid} /* BootSplash.storyboard in Resources */,`,
   );
-  await CustomPromise.replaceStringFilePromise(
-    `${pbxProjectPath}`,
-    '{\n\t\t\t\t\tvalue = 78570A06BE1A4B96B4F1D407;\n\t\t\t\t\tcomment = ;\n\t\t\t\t}',
-    '78570A06BE1A4B96B4F1D407 /*   */',
-  );
+  // Fix bug No Scheme in XCode
+  const REGEX_BUG_NO_SCHEME = /{\\n\\t\\t\\t\\t\\tvalue = .{24};\\n\\t\\t\\t\\t\\tcomment = ;\\n\\t\\t\\t\\t}/;
+  const contentPbxPrjForNoScheme = await CustomPromise.readFilePromise(`${pbxProjectPath}`);
+  const uuidNoSchemeBugText = RegExp(REGEX_BUG_NO_SCHEME).exec(JSON.stringify(contentPbxPrjForNoScheme))[0]?.split(';')[0]?.split(' = ')[1];
+  if (uuidNoSchemeBugText) {
+    await CustomPromise.replaceStringFilePromise(
+      `${pbxProjectPath}`,
+      contentPbxPrjForNoScheme,
+      '',
+    );
+    await CustomPromise.replaceStringFilePromise(
+      `${pbxProjectPath}`,
+      '',
+      JSON.parse(JSON.stringify(contentPbxPrjForNoScheme).replace(REGEX_BUG_NO_SCHEME, `${uuidNoSchemeBugText} /*   */`)),
+    );
+  }
 };
 
 const ChangeSplashScreen = {
