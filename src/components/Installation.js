@@ -1,27 +1,24 @@
 const fs = require('fs');
 const chalk = require('chalk');
 const CustomPromise = require('utils/promises');
-const BaseTemplet = require('./config/BaseTemplet');
 
-const currPath = './react-native-templet-v1';
+const templateUrl = 'https://github.com/SpQuyt/amela-react-native-template-test';
 
-const handleInstallPackages = async ({ appName, appDisplayName, repoURL }) => {
+const handleInstallPackages = async ({ appName, repoURL }) => {
   const newPath = `./${appName}`;
-  const newPathWithCLI = `./${appName}-cli`;
+  const appNameWithoutHyphen = appName.replace(/-/g, '');
+  const templatePath = `./${appNameWithoutHyphen}`;
 
   if (!fs.existsSync(newPath)) {
-    await CustomPromise.gitClonePromise();
-    fs.renameSync(currPath, newPath);
-    await BaseTemplet.configAndInstall({ appName, appDisplayName });
     if (repoURL) {
       const repoUrlSplitArr = repoURL.split('/');
       const repoPath = `./${repoUrlSplitArr?.[repoUrlSplitArr.length - 1]?.replace('.git', '')}`;
-      await CustomPromise.execCommandLinePromise(`cd ${newPath} && rm -rf .git`);
-      await CustomPromise.execCommandLinePromise(`mv ${newPath} ${newPathWithCLI}`);
       await CustomPromise.gitClonePromise(undefined, repoURL);
-      fs.renameSync(repoPath, newPath);
-      await CustomPromise.execCommandLinePromise(`cp -a ${newPathWithCLI}/. ${newPath}/`, `Copying folder ${newPathWithCLI} to ${newPath}...`);
-      await CustomPromise.execCommandLinePromise(`rm -r ${newPathWithCLI.replace('./', '')}`, `Removing folder ${newPathWithCLI}...`);
+      fs.renameSync(repoPath, `${newPath}-from-git`);
+      CustomPromise.execCommandLineSync(`npx react-native init ${appNameWithoutHyphen} --template ${templateUrl}`, 'Initializing project from template...');
+      CustomPromise.execCommandLineSync(`cp -a ${templatePath}/* ${newPath}-from-git/`, `Copying folder ${templatePath} to ${newPath}-from-git...`);
+      CustomPromise.execCommandLineSync(`rm -rf ${templatePath}`, `Removing folder ${templatePath}...`);
+      fs.renameSync(`${newPath}-from-git`, newPath);
     }
     return true;
   }

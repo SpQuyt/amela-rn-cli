@@ -9,7 +9,7 @@ const git = simpleGit();
 const prompt = require('prompt');
 const colors = require('colors/safe');
 const { Spinner } = require('clui');
-const { exec } = require('child_process');
+const { exec, execSync } = require('child_process');
 const fs = require('fs');
 const inquirer = require('inquirer');
 const sharp = require('sharp');
@@ -76,6 +76,14 @@ const execCommandLinePromise = async (
       }
     });
   });
+};
+
+const execCommandLineSync = (
+  execString,
+  cmdMessage = 'Executing command line...',
+) => {
+  console.log(`🚗 🚗 🚗 ${cmdMessage}`);
+  execSync(execString, { stdio: 'inherit' });
 };
 
 const replaceStringFilePromise = async (filePath, oldString, newString) => new Promise((resolve, reject) => {
@@ -284,6 +292,7 @@ const CustomPromise = {
   createKeyStorePromise,
   getKeyStoreInfoPromise,
   generateIconsPromise,
+  execCommandLineSync,
 };
 
 module.exports = CustomPromise;
