@@ -2,7 +2,7 @@ const fs = require('fs');
 const chalk = require('chalk');
 const CustomPromise = require('utils/promises');
 
-const templateUrl = 'https://github.com/SpQuyt/amela-react-native-template-test';
+const templateUrl = 'react-native-template-amela';
 
 const handleInstallPackages = async ({ appName, repoURL }) => {
   const newPath = `./${appName}`;
