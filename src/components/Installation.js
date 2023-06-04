@@ -20,6 +20,7 @@ const handleInstallPackages = async ({ appName, repoURL }) => {
       CustomPromise.execCommandLineSync(`rm -rf ${templatePath}`, `Removing folder ${templatePath}...`);
       fs.renameSync(`${newPath}-from-git`, newPath);
     }
+    CustomPromise.execCommandLineSync(`npx react-native init ${appNameWithoutHyphen} --template ${templateUrl}`, 'Initializing project from template...');
     return true;
   }
   if (fs.existsSync(newPath)) {
